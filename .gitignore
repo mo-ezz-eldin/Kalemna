@@ -1,0 +1,24 @@
+__pycache__/
+*.bin
+*.pt
+*.pth
+.env
+venv/
+.idea/
+bayan_model_45000/
+best-t5small/
+best-tokenizer-for t5-small/
+customer-service-models/
+customer-service-tokenizers/
+t5-small-spell-one-batch-checkpoints/
+t5-small-spell-one_batch/
+models/
+*.csv
+glove.6B.*
+wandb/
+mlflow.db
+customer_intents/
+data/
+notebooks/
+*.ipynb
+app.py
