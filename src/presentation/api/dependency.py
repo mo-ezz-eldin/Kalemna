@@ -1,8 +1,7 @@
 from fastapi import Request,Depends
-
+from src.presentation.api.app import app
 from src.application.decision_maker import DecisionMaker
 from src.domain.interfaces.ITextClassifier import ITextClassifier
-from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
 from src.application.orchestrator import ChatOrchestrator
 def get_intent_classifier(request:Request) -> ITextClassifier:
     return request.app.state.intent_model
@@ -11,12 +10,12 @@ def get_sentiment_classifier(request:Request) -> ITextClassifier:
     return request.app.state.sentiment_model
 
 
-def get_chatorchestra(intent:ITextClassifier=Depends(get_intent_classifier),
-sentiment:ITextClassifier =Depends(get_sentiment_classifier))->ChatOrchestrator:
+def get_chatorchestra(request:Request) -> ChatOrchestrator:
+
     return ChatOrchestrator(
-        intent_model = intent,
-        sentiment_model = sentiment,
-        preprocessor=TextPreprocessor()
+        intent_model = app.state.intent_model,
+        sentiment_model = app.state.sentiment_model,
+        preprocessor=app.state.preprocessor
     )
 
 

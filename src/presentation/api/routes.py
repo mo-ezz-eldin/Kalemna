@@ -34,11 +34,9 @@ async def predict_feeling(
 @router.post('/final_prediction')
 async def chat_orcherstra(
         request: ChatRequest , Decision : DecisionMaker = Depends(decide)
-)->float:
+)->dict[str, str]:
     start_time=time.time()
     final_decision=Decision.get_action(text=request.text)
     finished_time=time.time()
     latency_time=finished_time-start_time
-    return latency_time
-
-
+    return final_decision
