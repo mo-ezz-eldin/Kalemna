@@ -13,5 +13,5 @@ class JudgeExtractSchema(BaseModel):
         description="Key-value pairs of extracted metadata fields from the user query mapped to their values based on the intent metadata requirement."
     )
     is_misunderstanding: bool = Field(
-        description="Set to true if the user query is completely ambiguous, vague, or nonsensical context-wise; otherwise false."
+        description="Set to True if the user query is completely ambiguous, vague, or nonsensical context-wise; otherwise False."
     )

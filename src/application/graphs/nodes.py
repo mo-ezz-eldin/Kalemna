@@ -6,6 +6,7 @@ from src.application.prompts.finalize_prompt import FINALIZE_PROMPT
 from src.config.intents_metadata import Meta_Data_Intents
 from src.application.decision_maker import DecisionMaker
 from langchain_core.messages import HumanMessage
+
 class Intent_Sentiment_Node():
     def __init__(self,orchestrator: ChatOrchestrator):
         self.orchestrator=orchestrator
@@ -91,6 +92,7 @@ class finalize_node():
                 "missing_entities": missing_entities,
                 "final_intent": final_intent,
                 "final_sentiment": final_sentiment,
+                "num_of_mis_understanding" : state.get('num_of_mis_understanding', 0),
                 "messages": state['Messages']
             })
 

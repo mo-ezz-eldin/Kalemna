@@ -2,11 +2,9 @@ from src.application.graphs.state import Customer_State
 from src.config.Constant import INTENT_LABELS
 from src.config.intents_metadata import Meta_Data_Intents
 
-
 def route_whether_to_final_or_tools(State: Customer_State):
     final_intent = State.get('final_intent', '').lower()
 
-    # 1. لو الأكشن من البداية تحويل، ننجز ونروح للـ finalize
     if State.get('action') == "human_escalation":
         return "finalize"
 

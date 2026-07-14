@@ -8,7 +8,7 @@ class DecisionMaker:
 
     def get_action(self, intent: str) -> dict:
 
-        action = Action_For_Intents.get(intent).get('action', "human_escalation")
+        action = Action_For_Intents.get(intent.lower()).get('action', "human_escalation")
 
         return {
             "action": action

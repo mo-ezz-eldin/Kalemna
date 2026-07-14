@@ -16,9 +16,9 @@ Execute your task based on the following instructions:
 
 ### 1. JUDGEMENT & CORRECTION AUDIT:
 - Evaluate whether the 'Predicted Intent' and 'Predicted Sentiment' accurately reflect the customer's 'Raw Query'.
-- If the ML models are correct, confirm them. 
+- If the ML models are correct, confirm them by setting them as they are. 
 - If the ML models are incorrect (e.g., the customer is shifting context, expressing underlying anger not caught by the model, or trying to cancel an order while the model flagged it as tracking), you MUST override them and determine the true final intent and sentiment.
-- If the customer's query is completely vague, ambiguous, or nonsensical, flag it immediately as a misunderstanding (is_misunderstanding: true).
+- If the customer's query is completely vague, ambiguous, or nonsensical, flag it immediately as a misunderstanding (is_misunderstanding: True).
 - You must follow these intents only and don't choose other intents except these: {list(INTENT_LABELS.values())}
 - You must follow these sentiments only and don't choose other sentiments except these: {list(SENTIMENT_LABELS.values())}
 - If you are confident that the true intent or sentiment does not exist in the allowed list, mark it as "UNKNOWN".
