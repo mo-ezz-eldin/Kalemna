@@ -1,5 +1,7 @@
 from langgraph.graph import StateGraph, END,START
 from langgraph.prebuilt import ToolNode
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from src.domain.interfaces.IDatabase import IDatabase
 
 from src.application.graphs.state import Customer_State
 from src.application.orchestrator import ChatOrchestrator
@@ -13,15 +15,17 @@ from src.application.graphs.nodes import (
     finalize_node
 )
 
-#llm | db ( Short memory , Long Memory ) | tools (read_from_db completion)
+#llm | tools (read_from_db completion)
 from src.application.graphs.routes import route_whether_to_final_or_tools, route_after_decide
 
 
 from src.application.graphs.tools import read_from_db
 
 
-def build_customer_support_graph(orchestrator:ChatOrchestrator, decision_maker:DecisionMaker):
-
+def build_customer_support_graph(orchestrator:ChatOrchestrator,
+                                 decision_maker:DecisionMaker,
+                                 db :IDatabase,
+                                 chckpointer : AsyncPostgresSaver):
     workflow = StateGraph(Customer_State)
 
 
@@ -37,7 +41,6 @@ def build_customer_support_graph(orchestrator:ChatOrchestrator, decision_maker:D
     workflow.add_node("decide", decide_node)
     workflow.add_node("tools", tools_node)
     workflow.add_node("finalize", final_node)
-
 
 
     workflow.add_edge(START, 'intent_sentiment')
@@ -68,6 +71,6 @@ def build_customer_support_graph(orchestrator:ChatOrchestrator, decision_maker:D
     workflow.add_edge("finalize", END)
 
 
-    app = workflow.compile()
+    app = workflow.compile(checkpointer=chckpointer)
 
     return app
