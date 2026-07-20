@@ -20,7 +20,6 @@ from src.application.graphs.nodes import (
 from src.application.graphs.routes import route_whether_to_final_or_tools, route_after_decide
 
 
-from src.application.graphs.tools import read_from_db
 
 
 def build_customer_support_graph(orchestrator:ChatOrchestrator,
@@ -35,7 +34,7 @@ def build_customer_support_graph(orchestrator:ChatOrchestrator,
     decide_node = decide_excute()
     final_node = finalize_node()
 
-    tools_node = ToolNode([read_from_db])
+    tools_node = ToolNode([get_tools(db=db)])
 
     workflow.add_node("intent_sentiment", intent_node)
     workflow.add_node("judge", judge_node)

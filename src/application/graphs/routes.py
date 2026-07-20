@@ -37,8 +37,8 @@ def route_whether_to_final_or_tools(State: Customer_State):
     else:
         return 'decide'
 def route_after_decide(State:Customer_State):
-    last_message = State['Messages'][-1]
-    if hasattr(last_message,'tools_calls') and len(last_message.tools_call) > 0:
+    last_message = State['messages'][-1]
+    if hasattr(last_message,'tool_calls') and len(last_message.tools_call) > 0:
         return 'tools'
     else:
         return 'finalize'

@@ -4,7 +4,7 @@ from langgraph.graph import add_messages
 class Customer_State(TypedDict):
     user_id: str
     user_query: str
-    Messages : Annotated[List,add_messages]
+    messages : Annotated[List,add_messages]
     is_misunderstanding:bool
     num_of_mis_understanding:int
     predicted_intent: str

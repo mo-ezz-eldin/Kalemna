@@ -15,7 +15,7 @@ class Intent_Sentiment_Node():
         return {'predicted_intent':models_predictions['intent_result']['intent'],
             'predicted_sentiment':models_predictions['sentiment_result']['feeling'],
             'nodes_info':['models predicted successfully'],
-            'Messages':[HumanMessage(content=state['user_query'])]
+            'messages':[HumanMessage(content=state['user_query'])]
                 }
 
 class judge_and_extract_entities():
@@ -52,7 +52,7 @@ class decide_excute():
             "extracted_entities": state.get('extracted_entities', {}).get(current_intent, []),
 
             "user_id": state.get('user_id', 'Unknown'),
-            "Messages": state['Messages']
+            "messages": state['messages']
         })
 
         return {"messages": [response]}
@@ -93,7 +93,7 @@ class finalize_node():
                 "final_intent": final_intent,
                 "final_sentiment": final_sentiment,
                 "num_of_mis_understanding" : state.get('num_of_mis_understanding', 0),
-                "messages": state['Messages']
+                "messages": state['messages']
             })
 
             return {"messages": [response]}

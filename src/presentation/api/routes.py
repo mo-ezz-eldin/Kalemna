@@ -4,7 +4,7 @@ import uvicorn
 from fastapi import Depends,APIRouter
 from src.domain.interfaces.ITextClassifier import ITextClassifier
 from src.presentation.api.schemas import ChatRequest
-from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier,get_chatorchestra,decide
+from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier
 from src.application.orchestrator import ChatOrchestrator
 from src.application.decision_maker import DecisionMaker
 
@@ -33,10 +33,7 @@ async def predict_feeling(
 
 @router.post('/final_prediction')
 async def chat_orcherstra(
-        request: ChatRequest , Decision : DecisionMaker = Depends(decide)
-)->dict[str, str]:
-    start_time=time.time()
-    final_decision=Decision.get_action(text=request.text)
-    finished_time=time.time()
-    latency_time=finished_time-start_time
-    return final_decision
+        request: ChatRequest
+)->str:
+
+    return request.text

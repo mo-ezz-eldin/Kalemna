@@ -1,5 +1,4 @@
-from fastapi import Request,Depends
-from src.presentation.api.app import app
+from fastapi import Request
 from src.application.decision_maker import DecisionMaker
 from src.domain.interfaces.ITextClassifier import ITextClassifier
 from src.application.orchestrator import ChatOrchestrator
