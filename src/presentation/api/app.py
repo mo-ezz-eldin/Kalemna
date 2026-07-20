@@ -38,7 +38,17 @@ async def lifespan_context(app: FastAPI):
 
     app.state.preprocessor = TextPreprocessor()
 
-    app.state.pool = AsyncConnectionPool(conninfo=settings.postgres_db_conn)
+    # 1. بنضيف autocommit وبنقوله متفتحش الاتصال أوتوماتيك عشان التحذير
+    app.state.pool = AsyncConnectionPool(
+        conninfo=settings.postgres_db_conn.replace("+asyncpg", ""),
+        kwargs={"autocommit": True},
+        open=False
+    )
+
+    # 2. بنفتح الاتصال إحنا بشكل Async نظيف
+    await app.state.pool.open()
+
+    # 3. بنبني الجداول والجراف
     app.state.checkpointer = AsyncPostgresSaver(app.state.pool)
     await app.state.checkpointer.setup()
 
