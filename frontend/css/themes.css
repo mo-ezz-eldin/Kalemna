@@ -1,0 +1,134 @@
+/* ============================================
+   Kalemna — Themes (themes.css)
+   كلمنا — السمات
+   ============================================ */
+
+/* ═══════════════════════════════════════════
+   🌙 DARK THEME (Default)
+   ═══════════════════════════════════════════ */
+[data-theme="dark"], :root {
+  --bg-app:        hsl(225, 25%, 10%);
+  --bg-main:       hsl(225, 25%, 10%);
+  --bg-header:     hsla(225, 25%, 12%, 0.85);
+  --bg-sidebar:    hsl(225, 25%, 9%);
+  --bg-input-bar:  hsla(225, 25%, 12%, 0.85);
+  --bg-input:      hsl(225, 22%, 14%);
+  --bg-surface:    hsl(225, 22%, 14%);
+  --bg-surface-hover: hsl(225, 22%, 17%);
+  --bg-hover:      hsla(225, 22%, 20%, 0.5);
+  --bg-glass:      hsla(225, 25%, 14%, 0.6);
+  --bg-bubble-user: linear-gradient(135deg, hsl(245, 58%, 48%), hsl(260, 55%, 42%));
+  --bg-bubble-ai:  hsla(225, 22%, 16%, 0.7);
+  --bg-welcome:    hsla(225, 22%, 14%, 0.8);
+
+  --text-primary:   hsl(225, 15%, 92%);
+  --text-secondary: hsl(225, 12%, 65%);
+  --text-muted:     hsl(225, 10%, 45%);
+  --text-bubble-user: hsl(0, 0%, 100%);
+  --text-bubble-ai:   hsl(225, 15%, 88%);
+  --text-on-primary: hsl(0, 0%, 100%);
+
+  --border-subtle:  hsla(225, 15%, 25%, 0.5);
+  --border-input:   hsl(225, 15%, 22%);
+  --border-glass:   hsla(225, 15%, 30%, 0.3);
+
+  --scrollbar-thumb:       hsl(225, 15%, 25%);
+  --scrollbar-thumb-hover: hsl(225, 15%, 35%);
+
+  --particle-color: rgba(255, 255, 255, 0.04);
+  --particle-line:  rgba(255, 255, 255, 0.02);
+}
+
+/* ═══════════════════════════════════════════
+   ☀️ LIGHT THEME
+   ═══════════════════════════════════════════ */
+[data-theme="light"] {
+  --bg-app:        hsl(225, 20%, 97%);
+  --bg-main:       hsl(225, 20%, 97%);
+  --bg-header:     hsla(0, 0%, 100%, 0.9);
+  --bg-sidebar:    hsl(0, 0%, 100%);
+  --bg-input-bar:  hsla(0, 0%, 100%, 0.9);
+  --bg-input:      hsl(225, 15%, 95%);
+  --bg-surface:    hsl(0, 0%, 100%);
+  --bg-surface-hover: hsl(225, 15%, 96%);
+  --bg-hover:      hsla(225, 15%, 90%, 0.5);
+  --bg-glass:      hsla(0, 0%, 100%, 0.7);
+  --bg-bubble-user: linear-gradient(135deg, hsl(245, 58%, 55%), hsl(260, 55%, 50%));
+  --bg-bubble-ai:  hsla(225, 15%, 95%, 0.9);
+  --bg-welcome:    hsla(0, 0%, 100%, 0.9);
+
+  --text-primary:   hsl(225, 25%, 15%);
+  --text-secondary: hsl(225, 12%, 45%);
+  --text-muted:     hsl(225, 10%, 60%);
+  --text-bubble-user: hsl(0, 0%, 100%);
+  --text-bubble-ai:   hsl(225, 25%, 20%);
+  --text-on-primary: hsl(0, 0%, 100%);
+
+  --border-subtle:  hsl(225, 15%, 90%);
+  --border-input:   hsl(225, 15%, 85%);
+  --border-glass:   hsla(225, 15%, 85%, 0.4);
+
+  --scrollbar-thumb:       hsl(225, 12%, 80%);
+  --scrollbar-thumb-hover: hsl(225, 12%, 70%);
+
+  --particle-color: rgba(99, 72, 221, 0.04);
+  --particle-line:  rgba(99, 72, 221, 0.02);
+}
+
+/* ═══════════════════════════════════════════
+   🌌 MIDNIGHT THEME (Cyberpunk/Neon)
+   ═══════════════════════════════════════════ */
+[data-theme="midnight"] {
+  --bg-app:        hsl(240, 25%, 4%);
+  --bg-main:       hsl(240, 25%, 4%);
+  --bg-header:     hsla(240, 25%, 7%, 0.9);
+  --bg-sidebar:    hsl(240, 25%, 5%);
+  --bg-input-bar:  hsla(240, 25%, 7%, 0.9);
+  --bg-input:      hsl(240, 22%, 9%);
+  --bg-surface:    hsl(240, 22%, 8%);
+  --bg-surface-hover: hsl(240, 22%, 12%);
+  --bg-hover:      hsla(240, 22%, 15%, 0.5);
+  --bg-glass:      hsla(240, 25%, 8%, 0.7);
+  --bg-bubble-user: linear-gradient(135deg, hsl(265, 70%, 45%), hsl(290, 60%, 40%));
+  --bg-bubble-ai:  hsla(240, 22%, 10%, 0.8);
+  --bg-welcome:    hsla(240, 22%, 8%, 0.85);
+
+  --text-primary:   hsl(200, 50%, 93%);
+  --text-secondary: hsl(220, 20%, 55%);
+  --text-muted:     hsl(220, 15%, 38%);
+  --text-bubble-user: hsl(0, 0%, 100%);
+  --text-bubble-ai:   hsl(200, 40%, 88%);
+  --text-on-primary: hsl(0, 0%, 100%);
+
+  --border-subtle:  hsla(250, 30%, 20%, 0.5);
+  --border-input:   hsl(250, 25%, 18%);
+  --border-glass:   hsla(250, 30%, 25%, 0.3);
+
+  --scrollbar-thumb:       hsl(250, 20%, 22%);
+  --scrollbar-thumb-hover: hsl(250, 20%, 32%);
+
+  --color-primary-400: hsl(200, 100%, 60%);
+  --color-primary-500: hsl(270, 70%, 55%);
+  --shadow-glow: 0 0 25px rgba(0, 200, 255, 0.2);
+
+  --particle-color: rgba(0, 200, 255, 0.06);
+  --particle-line:  rgba(180, 100, 255, 0.03);
+}
+
+/* ─── Midnight Neon Accents ─── */
+[data-theme="midnight"] .header {
+  border-bottom-color: hsla(200, 100%, 60%, 0.15);
+}
+
+[data-theme="midnight"] .sidebar {
+  border-left-color: hsla(270, 70%, 55%, 0.15);
+}
+
+[data-theme="midnight"] .input-bar__container:focus-within {
+  border-color: hsl(200, 100%, 60%);
+  box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.15), 0 0 20px rgba(0, 200, 255, 0.1);
+}
+
+[data-theme="midnight"] .btn-send:hover {
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+}
