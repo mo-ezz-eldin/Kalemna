@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     corrector_model_path: str
     corrector_tokenizer: str
     postgres_db_conn: str
+    langchain_tracing_v2:bool
+    langchain_project:str
+    langchain_api_key:str
     model_config = SettingsConfigDict(env_file=ENV_PATH, env_file_encoding='utf-8', extra='ignore')
 
 settings = Settings()

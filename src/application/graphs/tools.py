@@ -22,7 +22,7 @@ def get_tools(db: IDatabase):
         except Exception as e:
             return f"Error reading from database: {str(e)}"
 
-        return [read_from_db]
+
 
 
 
