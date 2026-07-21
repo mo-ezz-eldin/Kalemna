@@ -1,10 +1,10 @@
-from fastapi import FastAPI,Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from loguru import logger
 from src.infrastructure.logging.logger_setup import setup_logging
 from contextlib import asynccontextmanager
-
+from src.presentation.exceptions.exception_handlers import exception_handler
 from src.application.decision_maker import DecisionMaker
 from src.application.graphs.customer_graph import build_customer_support_graph
 from src.application.orchestrator import ChatOrchestrator
@@ -17,7 +17,6 @@ from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
 from src.infrastructure.databases.posgres_db import PosgresDb
 from psycopg_pool import AsyncConnectionPool
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-
 
 
 
@@ -103,7 +102,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 app.include_router(router)
 
-
+app.add_exception_handler(Exception, exception_handler)
 
 if __name__ == '__main__':
     uvicorn.run("src.presentation.api.app:app", host="127.0.0.1", port=8000, reload=True)
