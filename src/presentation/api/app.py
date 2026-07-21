@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-import logging
+from loguru import logger
+from src.infrastructure.logging.logger_setup import setup_logging
 from contextlib import asynccontextmanager
 
 from src.application.decision_maker import DecisionMaker
@@ -16,46 +17,54 @@ from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
 from src.infrastructure.databases.posgres_db import PosgresDb
 from psycopg_pool import AsyncConnectionPool
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-logging.basicConfig(level=logging.INFO)
 
-logger = logging.getLogger(__name__)
+
 
 
 @asynccontextmanager
 async def lifespan_context(app: FastAPI):
+    setup_logging()
+    try:
+        logger.info('DB, AI Models and Graph are starting.....')
 
-    app.state.intent_model = IntentModel(
+        app.state.intent_model = IntentModel(
         model_path=settings.intent_model_path,
         labels_map=INTENT_LABELS,
         tokenizer_path=settings.intent_tokenizer
-    )
+        )
+        logger.info('Intent model loaded successfully!')
 
-    app.state.sentiment_model = SentimentClassifier(
+        app.state.sentiment_model = SentimentClassifier(
         model_path=settings.sentiment_model_path,
         tokenizer_path=settings.sentiment_tokenizer,
         labels=SENTIMENT_LABELS
-    )
+        )
+        logger.info('Sentiment model loaded successfully!')
 
-    app.state.preprocessor = TextPreprocessor()
+        app.state.preprocessor = TextPreprocessor()
 
-    # 1. بنضيف autocommit وبنقوله متفتحش الاتصال أوتوماتيك عشان التحذير
-    app.state.pool = AsyncConnectionPool(
+
+        app.state.pool = AsyncConnectionPool(
         conninfo=settings.postgres_db_conn.replace("+asyncpg", ""),
         kwargs={"autocommit": True},
         open=False
-    )
+        )
 
-    # 2. بنفتح الاتصال إحنا بشكل Async نظيف
-    await app.state.pool.open()
+
+        await app.state.pool.open()
+
+
 
     # 3. بنبني الجداول والجراف
-    app.state.checkpointer = AsyncPostgresSaver(app.state.pool)
-    await app.state.checkpointer.setup()
+        app.state.checkpointer = AsyncPostgresSaver(app.state.pool)
+        await app.state.checkpointer.setup()
 
-    app.state.rel_db = PosgresDb(config=settings.postgres_db_conn)
+        app.state.rel_db = PosgresDb(config=settings.postgres_db_conn)
+
+        logger.info('DB with short memory and long memory loaded successfully!')
 
 
-    app.state.graph = build_customer_support_graph(
+        app.state.graph = build_customer_support_graph(
         orchestrator=ChatOrchestrator(
             intent_model=app.state.intent_model,
             sentiment_model=app.state.sentiment_model,
@@ -64,9 +73,12 @@ async def lifespan_context(app: FastAPI):
         decision_maker=DecisionMaker(),
         db=app.state.rel_db,
         chckpointer=app.state.checkpointer
-    )
+        )
 
-    logger.info("✅ Models, Database, and Graph loaded successfully!")
+        logger.info("Graph loaded successfully!")
+    except Exception as e:
+        logger.exception(f'failed to start application: {e}')
+        raise e
 
     yield
 
