@@ -4,7 +4,7 @@
    ============================================ */
 
 const API_BASE_URL = 'http://localhost:8000';
-const REQUEST_TIMEOUT = 15000; // 15 seconds
+const REQUEST_TIMEOUT = 15000;
 
 /**
  * Makes a POST request to the API.
