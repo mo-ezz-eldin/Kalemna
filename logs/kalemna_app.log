@@ -1,0 +1,234 @@
+2026-07-31 23:21:51.163 | INFO     | src.presentation.api.app:lifespan_context:27 - DB, AI Models and Graph are starting.....
+2026-07-31 23:21:52.504 | ERROR    | src.presentation.api.app:lifespan_context:79 - failed to start application: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'. Use `repo_type` argument if needed.
+Traceback (most recent call last):
+
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\transformers\utils\hub.py", line 479, in cached_files
+    hf_hub_download(
+    └ <function hf_hub_download at 0x000001C0823DA660>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\huggingface_hub\utils\_validators.py", line 106, in _inner_fn
+    validate_repo_id(arg_value)
+    │                └ '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'
+    └ <function validate_repo_id at 0x000001C08239C2C0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\huggingface_hub\utils\_validators.py", line 154, in validate_repo_id
+    raise HFValidationError(
+          └ <class 'huggingface_hub.errors.HFValidationError'>
+
+huggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'. Use `repo_type` argument if needed.
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
+    sys.exit(main())
+    │   │    └ <Command main>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\click\core.py", line 1462, in __call__
+    return self.main(*args, **kwargs)
+           │    │     │       └ {}
+           │    │     └ ()
+           │    └ <function Command.main at 0x000001C0FE89AC00>
+           └ <Command main>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\click\core.py", line 1383, in main
+    rv = self.invoke(ctx)
+         │    │      └ <click.core.Context object at 0x000001C0FE9FBE00>
+         │    └ <function Command.invoke at 0x000001C0FE89A8E0>
+         └ <Command main>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\click\core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           │   │      │    │           │   └ {'host': '127.0.0.1', 'port': 8000, 'app': 'src.presentation.api.app:app', 'uds': None, 'fd': None, 'reload': False, 'reload_...
+           │   │      │    │           └ <click.core.Context object at 0x000001C0FE9FBE00>
+           │   │      │    └ <function main at 0x000001C0FEAE0680>
+           │   │      └ <Command main>
+           │   └ <function Context.invoke at 0x000001C0FE899B20>
+           └ <click.core.Context object at 0x000001C0FE9FBE00>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\click\core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+           │         │       └ {'host': '127.0.0.1', 'port': 8000, 'app': 'src.presentation.api.app:app', 'uds': None, 'fd': None, 'reload': False, 'reload_...
+           │         └ ()
+           └ <function main at 0x000001C0FEAE0680>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\uvicorn\main.py", line 423, in main
+    run(
+    └ <function run at 0x000001C0FE968220>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\uvicorn\main.py", line 593, in run
+    server.run()
+    │      └ <function Server.run at 0x000001C0FE95FA60>
+    └ <uvicorn.server.Server object at 0x000001C0FEAE8830>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\uvicorn\server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x000001C0FE9253A0>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x000001C0FEAE81A0>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x000001C0FEAE8830>
+           │           │    │             └ None
+           │           │    └ <function Server.serve at 0x000001C0FE95FB00>
+           │           └ <uvicorn.server.Server object at 0x000001C0FEAE8830>
+           └ <function run at 0x000001C0FCBE85E0>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x000001C0FEA97D80>
+           │      └ <function Runner.run at 0x000001C0FCC4AE80>
+           └ <asyncio.runners.Runner object at 0x000001C0FEAE8AD0>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packa...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000001C0FCC48A40>
+           │    └ <ProactorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x000001C0FEAE8AD0>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000001C0FCC489A0>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000001C0FCC4A7A0>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2042, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000001C0FCB7D6C0>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000001C0D4087820>()>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000001C0D4087820>()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000001C0D4087820>()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x000001C0D4087820>()>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\uvicorn\lifespan\on.py", line 86, in main
+    await app(scope, self.receive, self.send)
+          │   │      │    │        │    └ <function LifespanOn.send at 0x000001C0FEC45DA0>
+          │   │      │    │        └ <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>
+          │   │      │    └ <function LifespanOn.receive at 0x000001C0FEC45E40>
+          │   │      └ <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>
+          │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x000001C0D5C9AA50>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 29, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+                 │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+                 │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+                 │    └ <fastapi.applications.FastAPI object at 0x000001C0D5C9A3C0>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x000001C0D5C9AA50>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\fastapi\applications.py", line 1139, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+                           │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+                           └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │                │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │                └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x000001C0D5C9B4D0>
+          └ <fastapi.applications.FastAPI object at 0x000001C0D5C9A3C0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\middleware\errors.py", line 151, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <starlette.middleware.cors.CORSMiddleware object at 0x000001C0D5C9B380>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x000001C0D5C9B4D0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\middleware\cors.py", line 77, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001C0D5C9B230>
+          └ <starlette.middleware.cors.CORSMiddleware object at 0x000001C0D5C9B380>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 49, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001C0D5C9B0E0>
+          └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001C0D5C9B230>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <fastapi.routing.APIRouter object at 0x000001C0D5CAED50>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001C0D5C9B0E0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │                │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │                └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x000001C0D5CAED50>>
+          └ <fastapi.routing.APIRouter object at 0x000001C0D5CAED50>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\routing.py", line 725, in app
+    await self.lifespan(scope, receive, send)
+          │    │        │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │        │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x000001C0D5C9ACF0>>
+          │    │        └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <function Router.lifespan at 0x000001C0FFB7F060>
+          └ <fastapi.routing.APIRouter object at 0x000001C0D5CAED50>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\starlette\routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               │    │                └ <fastapi.applications.FastAPI object at 0x000001C0D5C9A3C0>
+               │    └ <function _merge_lifespan_context.<locals>.merged_lifespan at 0x000001C0D5D9EAC0>
+               └ <fastapi.routing.APIRouter object at 0x000001C0D5CAED50>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+                       │    └ <async_generator object _merge_lifespan_context.<locals>.merged_lifespan at 0x000001C0D5CA6DF0>
+                       └ <contextlib._AsyncGeneratorContextManager object at 0x000001C0D5C9B770>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\fastapi\routing.py", line 206, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               │                └ <fastapi.applications.FastAPI object at 0x000001C0D5C9A3C0>
+               └ <function lifespan_context at 0x000001C0D43AEC00>
+  File "C:\Users\dell\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+                       │    └ <async_generator object lifespan_context at 0x000001C0D5CFED40>
+                       └ <contextlib._AsyncGeneratorContextManager object at 0x000001C0D5CAFB10>
+
+> File "C:\Users\dell\PycharmProjects\JupyterProject\src\presentation\api\app.py", line 29, in lifespan_context
+    app.state.intent_model = IntentModel(
+    │   │                    └ <class 'src.infrastructure.ai_models.intent_model.IntentModel'>
+    │   └ <starlette.datastructures.State object at 0x000001C0D5C9A660>
+    └ <fastapi.applications.FastAPI object at 0x000001C0D5C9A3C0>
+
+  File "C:\Users\dell\PycharmProjects\JupyterProject\src\infrastructure\ai_models\intent_model.py", line 11, in __init__
+    self.model = AutoModelForSequenceClassification.from_pretrained(model_path).to(self.device)
+    │            │                                  │               │              │    └ device(type='cuda')
+    │            │                                  │               │              └ <src.infrastructure.ai_models.intent_model.IntentModel object at 0x000001C0D5DB8440>
+    │            │                                  │               └ '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'
+    │            │                                  └ <classmethod(<function _BaseAutoModelClass.from_pretrained at 0x000001C0D435F4C0>)>
+    │            └ <class 'transformers.models.auto.modeling_auto.AutoModelForSequenceClassification'>
+    └ <src.infrastructure.ai_models.intent_model.IntentModel object at 0x000001C0D5DB8440>
+
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\transformers\models\auto\auto_factory.py", line 508, in from_pretrained
+    resolved_config_file = cached_file(
+                           └ <function cached_file at 0x000001C0AC672200>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\transformers\utils\hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           │                            │                           │            └ {'_raise_exceptions_for_gated_repo': False, '_raise_exceptions_for_missing_entries': False, '_raise_exceptions_for_connection...
+           │                            │                           └ 'config.json'
+           │                            └ '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'
+           └ <function cached_files at 0x000001C0AC6722A0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\transformers\utils\hub.py", line 532, in cached_files
+    _get_cache_file_to_return(path_or_repo_id, filename, cache_dir, revision, repo_type)
+    │                         │                │         │          │         └ None
+    │                         │                │         │          └ None
+    │                         │                │         └ 'C:\\Users\\dell\\.cache\\huggingface\\hub'
+    │                         │                └ 'config.json'
+    │                         └ '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'
+    └ <function _get_cache_file_to_return at 0x000001C0AC671DA0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\transformers\utils\hub.py", line 143, in _get_cache_file_to_return
+    resolved_file = try_to_load_from_cache(
+                    └ <function try_to_load_from_cache at 0x000001C0823DA8E0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\huggingface_hub\utils\_validators.py", line 106, in _inner_fn
+    validate_repo_id(arg_value)
+    │                └ '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'
+    └ <function validate_repo_id at 0x000001C08239C2C0>
+  File "C:\Users\dell\PycharmProjects\JupyterProject\.venv\Lib\site-packages\huggingface_hub\utils\_validators.py", line 154, in validate_repo_id
+    raise HFValidationError(
+          └ <class 'huggingface_hub.errors.HFValidationError'>
+
+huggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/kalemna_app/customer_intents/distilbert-base-uncased/checkpoint-1452'. Use `repo_type` argument if needed.

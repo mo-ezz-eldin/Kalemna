@@ -1,12 +1,15 @@
-From python:3.10-slim
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
 
 WORKDIR /kalemna_app
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+RUN pip install --default-timeout=1000 --no-cache-dir -r requirements.txt
 
-copy . .
+COPY . .
 
-CMD ["uvicorn", "src.presentation.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 8000
+
+CMD ["uvicorn","src.presentation.api.app:app","--host", "0.0.0.0" ,"--port","8000"]
+
 

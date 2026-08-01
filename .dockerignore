@@ -1,0 +1,27 @@
+# فولدرات البيئة والكاش
+venv/
+.venv/
+__pycache__/
+.git/
+.idea/
+.vscode/
+.env
+
+# الموديلات الثقيلة وملفات الـ Data اللي مش لازمة جوه الكونتينر
+bayan_model_45000/
+best-t5small/
+best-tokenizer-for-t5-small/
+customer-service-models/
+customer-service-tokenizers/
+t5-small-spell-one-batch-checkpoints/
+t5-small-spell-one_batch/
+wandb/
+data/
+notebooks/
+
+
+glove*.txt
+
+
+mlflow.db
+*.log

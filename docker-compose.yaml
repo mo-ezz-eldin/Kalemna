@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=kalemna_user
+      - POSTGRES_PASSWORD=kalemna_pass
+      - POSTGRES_DB=kalemna_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  kalemna_backend:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./customer_intents:/kalemna_app/customer_intents
+      - ./models:/kalemna_app/models
+      - ./best-t5small:/kalemna_app/best-t5small
+    depends_on:
+      - postgres
+  kalmena_frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - kalemna_backend
+
+volumes:
+  postgres_data:
+
+

@@ -54,7 +54,7 @@ async def lifespan_context(app: FastAPI):
 
 
 
-    # 3. بنبني الجداول والجراف
+
         app.state.checkpointer = AsyncPostgresSaver(app.state.pool)
         await app.state.checkpointer.setup()
 
