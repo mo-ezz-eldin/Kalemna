@@ -13,5 +13,4 @@ class Customer_State(TypedDict):
     final_sentiment: str
     extracted_entities: Dict[str,List[str]]
     action : str
-    nodes_info: List[str]
     final_response: str

@@ -43,3 +43,7 @@ class IDatabase(ABC):
     @abstractmethod
     async def create_ticket(self, user_id: int, issue_type: str, order_id: Optional[int] = None) -> int:
         pass
+
+    @abstractmethod
+    async def setup_db(self):
+        pass

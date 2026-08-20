@@ -45,7 +45,7 @@ async def lifespan_context(app: FastAPI):
 
         app.state.pool = AsyncConnectionPool(
         conninfo=settings.postgres_db_conn.replace("+asyncpg", ""),
-        kwargs={"autocommit": True},
+
         open=False
         )
 
@@ -59,6 +59,8 @@ async def lifespan_context(app: FastAPI):
         await app.state.checkpointer.setup()
 
         app.state.rel_db = PosgresDb(config=settings.postgres_db_conn)
+
+        await app.state.rel_db.setup_db()
 
         logger.info('DB with short memory and long memory loaded successfully!')
 

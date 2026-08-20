@@ -5,7 +5,7 @@ from src.config.intents_metadata import Meta_Data_Intents
 def route_whether_to_final_or_tools(State: Customer_State):
     final_intent = State.get('final_intent', '').lower()
 
-    if State.get('action') == "human_escalation":
+    if State.get('action') == "human_escalation" or final_intent=="greeting" or  final_intent == 'needing guidance':
         return "finalize"
 
     num_of_mis_understanding = State.get('num_of_mis_understanding', 0)
@@ -14,18 +14,18 @@ def route_whether_to_final_or_tools(State: Customer_State):
 
     list_intents = [intent.lower() for intent in INTENT_LABELS.values()]
 
+
     required_entities = Meta_Data_Intents.get(final_intent, {}).get("required_metadata", [])
-    extracted_entities_for_intent = State.get('extracted_entities', {}).get(final_intent, [])
+    extracted_entities_dict = State.get('extracted_entities', {})
 
     is_missing_required_data = False
 
-    for req, ext in zip(required_entities, extracted_entities_for_intent):
-        if ext is None or str(ext).strip() == "":
+    for key in required_entities:
+        value = extracted_entities_dict.get(key)
+
+        if not value or (isinstance(value, list) and len(value) == 0) or (isinstance(value, str) and str(value).strip() == ""):
             is_missing_required_data = True
             break
-
-    if len(required_entities) > len(extracted_entities_for_intent):
-        is_missing_required_data = True
 
     if (mis_understand or
             final_intent not in list_intents or
@@ -35,10 +35,11 @@ def route_whether_to_final_or_tools(State: Customer_State):
 
         return 'finalize'
     else:
+
         return 'decide'
 def route_after_decide(State:Customer_State):
     last_message = State['messages'][-1]
-    if hasattr(last_message,'tool_calls') and len(last_message.tools_call) > 0:
+    if hasattr(last_message,'tool_calls') and len(last_message.tool_calls) > 0:
         return 'tools'
     else:
         return 'finalize'

@@ -43,5 +43,14 @@ Action_For_Intents={
   },
   "review": {
     "action": "llm_reply"
-  }
+  } ,
+    "greeting":{
+        "action" : "llm_reply"
+    }
+    ,
+
+    "needing guidance" :
+        {
+            "action" : "llm_reply"
+        }
 }

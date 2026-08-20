@@ -15,3 +15,7 @@ class JudgeExtractSchema(BaseModel):
     is_misunderstanding: bool = Field(
         description="Set to True if the user query is completely ambiguous, vague, or nonsensical context-wise; otherwise False."
     )
+
+    reasoning : str = Field(
+        description="you must explain every choice you made in few words about final_intent , final_sentiment and extracted_entities and is_misunderstanding."
+    )

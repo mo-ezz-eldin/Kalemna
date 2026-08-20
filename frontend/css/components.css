@@ -544,6 +544,42 @@
 }
 
 /* ═══════════════════════════════════════════
+   USER PROFILE (Header)
+   ═══════════════════════════════════════════ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.user-profile__name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-profile__logout {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.user-profile__logout:hover {
+  background: hsla(0, 72%, 56%, 0.1);
+  color: var(--color-error);
+}
+
+/* ═══════════════════════════════════════════
    TOOLTIP
    ═══════════════════════════════════════════ */
 [data-tooltip] {

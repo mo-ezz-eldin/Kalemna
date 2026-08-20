@@ -3,7 +3,7 @@ INTENT_LABELS = {
     4: 'contact_customer_service', 5: 'delivery_options', 6: 'complaint',
     7: 'change_shipping_address', 8: 'check_cancellation_fee', 9: 'track_refund',
     10: 'delivery_period', 11: 'check_refund_policy', 12: 'change_order',
-    13: 'cancel_order', 14: 'review'
+    13: 'cancel_order', 14: 'review' , 15 : 'greeting' , 16 : 'needing guidance'
 }
 SENTIMENT_LABELS = {
     0: "anger",

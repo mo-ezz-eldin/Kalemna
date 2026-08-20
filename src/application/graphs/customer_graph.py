@@ -20,21 +20,21 @@ from src.application.graphs.nodes import (
 from src.application.graphs.routes import route_whether_to_final_or_tools, route_after_decide
 
 
-
-
-def build_customer_support_graph(orchestrator:ChatOrchestrator,
-                                 decision_maker:DecisionMaker,
-                                 db :IDatabase,
-                                 chckpointer : AsyncPostgresSaver):
+def build_customer_support_graph(orchestrator: ChatOrchestrator,
+                                 decision_maker: DecisionMaker,
+                                 db: IDatabase,
+                                 chckpointer: AsyncPostgresSaver):
     workflow = StateGraph(Customer_State)
 
+    my_tools = get_tools(db=db)
 
     intent_node = Intent_Sentiment_Node(orchestrator=orchestrator)
     judge_node = judge_and_extract_entities(decision_maker=decision_maker)
-    decide_node = decide_excute()
+
+    decide_node = decide_excute(tools_list=my_tools)
     final_node = finalize_node()
 
-    tools_node = ToolNode([get_tools(db=db)])
+    tools_node = ToolNode(my_tools)
 
     workflow.add_node("intent_sentiment", intent_node)
     workflow.add_node("judge", judge_node)
@@ -42,11 +42,8 @@ def build_customer_support_graph(orchestrator:ChatOrchestrator,
     workflow.add_node("tools", tools_node)
     workflow.add_node("finalize", final_node)
 
-
     workflow.add_edge(START, 'intent_sentiment')
-
     workflow.add_edge("intent_sentiment", "judge")
-
 
     workflow.add_conditional_edges(
         "judge",
@@ -67,10 +64,8 @@ def build_customer_support_graph(orchestrator:ChatOrchestrator,
     )
 
     workflow.add_edge("tools", "decide")
-
     workflow.add_edge("finalize", END)
 
-
-    app = workflow.compile(checkpointer=chckpointer)
+    app = workflow.compile(checkpointer=chckpointer )
 
     return app

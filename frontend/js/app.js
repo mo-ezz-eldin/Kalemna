@@ -95,7 +95,8 @@ class KalemnaApp {
   _handleSend() {
     const input = document.getElementById('chat-input');
     if (input && input.value.trim()) {
-      this.chat.send(input.value);
+      const userText = input.value.trim();
+      this.chat.send(userText);
     }
   }
 

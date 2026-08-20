@@ -1,5 +1,5 @@
 from typing import Optional,Dict, Any,List
-
+from src.infrastructure.databases.orm_models import base
 from src.domain.interfaces.IDatabase import IDatabase
 
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -10,6 +10,11 @@ class PosgresDb(IDatabase):
     def __init__(self,config):
         self.config = config
         self.engine = create_async_engine(self.config, echo=False)
+
+
+    async def setup_db(self):
+        async with self.engine.begin() as conn:
+            await conn.run_sync(base.metadata.create_all)
 
 
     async def disconnect(self) -> None:

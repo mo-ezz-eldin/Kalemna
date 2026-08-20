@@ -115,6 +115,17 @@
         </div>
       </div>
       <div class="header__left">
+        <!-- User Profile -->
+        <div class="user-profile" id="user-profile" style="display: none;">
+          <span class="user-profile__name" id="user-profile-name"></span>
+          <button class="user-profile__logout" id="btn-logout" data-tooltip="تسجيل الخروج" aria-label="تسجيل الخروج">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </button>
+        </div>
         <button class="theme-toggle" id="theme-toggle" data-tooltip="تغيير السمة" aria-label="تغيير السمة">
           <span class="theme-toggle__icon">🌙</span>
         </button>
@@ -186,6 +197,34 @@
     </main>
   </div>
 
+  <!-- Auth Guard: redirect to login if not logged in -->
+  <script>
+    (function() {
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('kalemna_current_user')); } catch(e) {}
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        // Show user profile in header once DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+          var profileEl = document.getElementById('user-profile');
+          var nameEl = document.getElementById('user-profile-name');
+          if (profileEl && nameEl) {
+            nameEl.textContent = user.username;
+            profileEl.style.display = 'flex';
+          }
+          // Logout button
+          var logoutBtn = document.getElementById('btn-logout');
+          if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+              localStorage.removeItem('kalemna_current_user');
+              window.location.href = 'login.html';
+            });
+          }
+        });
+      }
+    })();
+  </script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

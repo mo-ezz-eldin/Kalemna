@@ -3,7 +3,7 @@
    كلمنا — محرك المحادثة
    ============================================ */
 
-import { sendMessage } from './api.js';
+import { sendMessage, sendChatMessage } from './api.js';
 import { escapeHTML, relativeTime, renderMarkdownLite, generateId, SENTIMENT_MAP } from './utils.js';
 
 export class ChatEngine {
@@ -15,6 +15,7 @@ export class ChatEngine {
     this.messages = [];
     this.isProcessing = false;
     this.conversationId = generateId();
+    this._timeUpdateInterval = null;
   }
 
   /**
@@ -23,10 +24,11 @@ export class ChatEngine {
   init() {
     this._showWelcome();
     this._updateSendButton();
+    this._startTimeUpdater();
   }
 
   /**
-   * Sends a user message and gets AI response.
+   * Sends a user message and gets AI response via stream.
    * @param {string} text
    */
   async send(text) {
@@ -47,15 +49,46 @@ export class ChatEngine {
     // Show typing indicator
     const typingEl = this._showTyping();
 
+    let botMsgId = null;
+    let fullBotText = '';
+
     try {
-      const response = await sendMessage(trimmed);
-      this._removeTyping(typingEl);
+      await sendChatMessage(trimmed, this.conversationId, (token) => {
+        if (!botMsgId) {
+          this._removeTyping(typingEl);
+          botMsgId = generateId();
+          const msg = {
+            id: botMsgId,
+            role: 'ai',
+            text: '',
+            timestamp: new Date(),
+          };
+          this.messages.push(msg);
+          this._renderMessage(msg);
+        }
 
-      // Parse the response — handle different response shapes
-      const aiText = this._extractResponseText(response);
-      const sentiment = this._extractSentiment(response);
+        fullBotText += token;
 
-      this._addMessage('ai', aiText, { sentiment });
+        // Update message content
+        const msg = this.messages.find(m => m.id === botMsgId);
+        if (msg) {
+          msg.text = fullBotText;
+        }
+
+        const el = document.getElementById(`msg-${botMsgId}`);
+        if (el) {
+          const bubble = el.querySelector('.message__bubble');
+          if (bubble) {
+            bubble.innerHTML = renderMarkdownLite(fullBotText);
+          }
+        }
+        this._scrollToBottom();
+      });
+
+      if (!botMsgId) {
+        this._removeTyping(typingEl);
+        this._addMessage('ai', 'عذراً، لم يتم استلام أي رد.');
+      }
     } catch (error) {
       this._removeTyping(typingEl);
       this._showError(error.message, trimmed);
@@ -155,6 +188,7 @@ export class ChatEngine {
 
     const time = document.createElement('span');
     time.className = 'message__time';
+    time.setAttribute('data-timestamp', new Date(msg.timestamp).toISOString());
     time.textContent = relativeTime(msg.timestamp);
 
     meta.appendChild(time);
@@ -284,6 +318,31 @@ export class ChatEngine {
     if (this.sendBtn) {
       this.sendBtn.disabled = this.isProcessing;
     }
+  }
+
+  /**
+   * Starts an interval that updates all message timestamps every 30 seconds.
+   */
+  _startTimeUpdater() {
+    if (this._timeUpdateInterval) {
+      clearInterval(this._timeUpdateInterval);
+    }
+    this._timeUpdateInterval = setInterval(() => {
+      this._updateAllTimes();
+    }, 30000); // Update every 30 seconds
+  }
+
+  /**
+   * Updates all visible message time labels with fresh relative times.
+   */
+  _updateAllTimes() {
+    const timeElements = this.messagesContainer.querySelectorAll('.message__time[data-timestamp]');
+    timeElements.forEach(el => {
+      const timestamp = el.getAttribute('data-timestamp');
+      if (timestamp) {
+        el.textContent = relativeTime(new Date(timestamp));
+      }
+    });
   }
 
   /**

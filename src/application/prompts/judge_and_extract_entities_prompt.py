@@ -6,7 +6,6 @@ from src.application.graphs.schemas import JudgeExtractSchema
 
 judge_extract_parser = JsonOutputParser(pydantic_object=JudgeExtractSchema)
 
-
 judge_and_extract_entities_template = ChatPromptTemplate.from_template(
     """You are an expert Quality Assurance Judge and Named Entity Recognition (NER) specialist for a production-grade Customer Support AI system. 
 
@@ -18,25 +17,32 @@ Execute your task based on the following instructions:
 - Evaluate whether the 'Predicted Intent' and 'Predicted Sentiment' accurately reflect the customer's 'Raw Query'.
 - If the ML models are correct, confirm them by setting them as they are. 
 - If the ML models are incorrect (e.g., the customer is shifting context, expressing underlying anger not caught by the model, or trying to cancel an order while the model flagged it as tracking), you MUST override them and determine the true final intent and sentiment.
-- If the customer's query is completely vague, ambiguous, or nonsensical, flag it immediately as a misunderstanding (is_misunderstanding: True).
+- If the customer's query is completely vague, ambiguous, or nonsensical, things that are not in the scope of customer support flag it immediately as a misunderstanding (is_misunderstanding: True) , Note that queries like 'how are u' or how you can help or what does this website for. all these are understood. 
 - You must follow these intents only and don't choose other intents except these: {intents_list}
 - You must follow these sentiments only and don't choose other sentiments except these: {sentiments_list}
 - If you are confident that the true intent or sentiment does not exist in the allowed list, mark it as "UNKNOWN".
 
 ### 2. NAMED ENTITY EXTRACTION (NER):
-- Scan the customer's 'Raw Query' for any specific operational metadata required to fulfill their request.
+- Scan the customer's 'Raw Query' AND the 'Conversation History' for any specific operational metadata required to fulfill their request.
 - Based on the final intent you determine, extract key entities using these mappings only: {meta_data_intents}
-- Do not hallucinate or guess any entity values. If an entity is not explicitly mentioned, leave it empty.
+- Do not hallucinate or guess any entity values. If an entity is not explicitly mentioned in the current query or the history, leave it empty.
 
 ### 3. FORMAT INSTRUCTIONS:
 {format_instructions}
 
 ### 4. INPUT DATA TO ANALYZE:
-- Customer Raw Query: {user_query}
-- Predicted Intent by ML Model: {predicted_intent}
-- Predicted Sentiment by ML Model: {predicted_sentiment}"""
-)
+- Conversation History (Context): 
+{chat_history}
 
+- Customer Raw Query (Latest): {user_query}
+- Predicted Intent by ML Model: {predicted_intent}
+- Predicted Sentiment by ML Model: {predicted_sentiment}
+
+### 5. CRITICAL OUTPUT RULES (MUST FOLLOW):
+- You MUST output ONLY a valid, raw JSON object.
+- DO NOT wrap the JSON in markdown blocks (e.g., do not use ```json or ```).
+- Your output must start exactly with {{ and end exactly with }}. Any other text will crash the system."""
+)
 
 judge_and_extract_entities_template = judge_and_extract_entities_template.partial(
     format_instructions=judge_extract_parser.get_format_instructions(),
@@ -45,3 +51,5 @@ judge_and_extract_entities_template = judge_and_extract_entities_template.partia
     meta_data_intents=Meta_Data_Intents
 )
 
+
+#- DO NOT output any reasoning, chain of thought, explanations, or introductory text.
