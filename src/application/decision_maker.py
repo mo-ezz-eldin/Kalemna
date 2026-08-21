@@ -10,6 +10,6 @@ class DecisionMaker:
         intent_data = Action_For_Intents.get(intent.lower(), {})
 
 
-        action_name = intent_data.get('action', "human_escalation")
+        action_name = intent_data.get('action', "")
 
         return {"action": action_name}

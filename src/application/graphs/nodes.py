@@ -11,7 +11,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from src.application.guardrails.output_safety_layer import safety_json_output
 
 
-
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     google_api_key="",
@@ -108,7 +107,7 @@ class finalize_node():
                     isinstance(value, str) and str(value).strip() == ""):
                 missing_entities.append(key)
 
-        if state.get('num_of_mis_understanding', 0) >= 3 or state.get('is_misunderstanding'):
+        if state.get('num_of_mis_understanding', 0) >= 3:
             action = "human_escalation"
 
 

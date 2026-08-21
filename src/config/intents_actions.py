@@ -48,7 +48,6 @@ Action_For_Intents={
         "action" : "llm_reply"
     }
     ,
-
     "needing guidance" :
         {
             "action" : "llm_reply"

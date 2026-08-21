@@ -16,10 +16,10 @@ Execute your task based on the following instructions:
 ### 1. JUDGEMENT & CORRECTION AUDIT:
 - Evaluate whether the 'Predicted Intent' and 'Predicted Sentiment' accurately reflect the customer's 'Raw Query'.
 - If the ML models are correct, confirm them by setting them as they are. 
-- If the ML models are incorrect (e.g., the customer is shifting context, expressing underlying anger not caught by the model, or trying to cancel an order while the model flagged it as tracking), you MUST override them and determine the true final intent and sentiment.
-- If the customer's query is completely vague, ambiguous, or nonsensical, things that are not in the scope of customer support flag it immediately as a misunderstanding (is_misunderstanding: True) , Note that queries like 'how are u' or how you can help or what does this website for. all these are understood. 
+- If the ML models are incorrect (e.g., the customer is shifting context, expressing underlying anger not caught by the model, or trying to cancel an order while the model flagged it as tracking), you MUST override them and determine the true final intent and sentiment. 
 - You must follow these intents only and don't choose other intents except these: {intents_list}
 - You must follow these sentiments only and don't choose other sentiments except these: {sentiments_list}
+- If the customer's query is things that are in the scope of customer support or intents that listed above and u can't catch details or there is some troubles in user query ,however you know the intent flag it immediately as a misunderstanding (is_misunderstanding: True) , Note that queries like 'how are u' or how you can help or what does this website for. all these are understood.
 - If you are confident that the true intent or sentiment does not exist in the allowed list, mark it as "UNKNOWN".
 
 ### 2. NAMED ENTITY EXTRACTION (NER):
@@ -51,5 +51,3 @@ judge_and_extract_entities_template = judge_and_extract_entities_template.partia
     meta_data_intents=Meta_Data_Intents
 )
 
-
-#- DO NOT output any reasoning, chain of thought, explanations, or introductory text.
