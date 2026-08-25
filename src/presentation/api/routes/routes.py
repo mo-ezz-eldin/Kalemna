@@ -4,9 +4,10 @@ from langgraph.graph.state import CompiledStateGraph
 
 from src.domain.interfaces.ITextClassifier import ITextClassifier
 from src.presentation.api.schemas import ChatRequest
-from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier
+from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier, get_agent_graph , oauth2_scheme
 from langchain_core.messages import HumanMessage
 from loguru import logger
+
 
 router = APIRouter()
 
@@ -77,8 +78,10 @@ async def predict_feeling(
 
 
 @router.post('/chat')
-async def chat(request_message:ChatRequest,graph_app:Request):
-    graph = graph_app.app.state.graph
+async def chat(request_message:ChatRequest,
+               graph_app: CompiledStateGraph = Depends(get_agent_graph) ,
+               token : str =  Depends(oauth2_scheme)):
+    graph = graph_app
 
     thread_id = request_message.user_id
 

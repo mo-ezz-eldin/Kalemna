@@ -9,7 +9,7 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
-    async def get_user(self, user_id: int) -> Optional[Dict[str, Any]]:
+    async def get_user(self, username: str) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod
@@ -46,4 +46,7 @@ class IDatabase(ABC):
 
     @abstractmethod
     async def setup_db(self):
+        pass
+
+    async def create_user(self,user_details : Dict):
         pass

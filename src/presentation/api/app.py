@@ -12,7 +12,8 @@ from src.config.settings import settings
 from src.config.Constant import SENTIMENT_LABELS,INTENT_LABELS
 from src.infrastructure.ai_models.intent_model import IntentModel
 from src.infrastructure.ai_models.sentiment_model import SentimentClassifier
-from src.presentation.api.routes import router
+from src.presentation.api.routes.routes import router
+from src.presentation.api.routes.auth import auth_router
 from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
 from src.infrastructure.databases.posgres_db import PosgresDb
 from psycopg_pool import AsyncConnectionPool
@@ -24,6 +25,8 @@ from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 async def lifespan_context(app: FastAPI):
     setup_logging()
     try:
+
+
         logger.info('DB, AI Models and Graph are starting.....')
 
         app.state.intent_model = IntentModel(
@@ -45,7 +48,7 @@ async def lifespan_context(app: FastAPI):
 
         app.state.pool = AsyncConnectionPool(
         conninfo=settings.postgres_db_conn.replace("+asyncpg", ""),
-
+        kwargs={"autocommit": True},
         open=False
         )
 
@@ -100,9 +103,10 @@ async def lifespan_context(app: FastAPI):
     logger.info("✅ Clean up complete!")
 
 app = FastAPI(lifespan=lifespan_context)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_methods=["*"], allow_headers=["*"])
 
-app.include_router(router)
+app.include_router(router , tags=["Authentication"])
+app.include_router(auth_router ,tags=["AI Support System"] )
 
 app.add_exception_handler(Exception, exception_handler)
 

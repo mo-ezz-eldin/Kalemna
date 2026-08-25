@@ -20,10 +20,37 @@ class PosgresDb(IDatabase):
     async def disconnect(self) -> None:
         await self.engine.dispose()
 
-    async def get_user(self, user_id: int) -> Optional[Dict[str, Any]]:
+
+    async def create_user(self, user_details : Dict) -> int:
         async with self.engine.begin() as conn:
-            Query=text('SELECT * FROM users WHERE user_id = :u_id')
-            result=await conn.execute(Query, {'u_id':user_id})
+
+            user_query = text('''
+                        INSERT INTO users (username, hashed_password, email, phone, default_address) 
+                        VALUES (:u_name, :hp, :email, :phone, :def_add) 
+                        RETURNING user_id
+                    ''')
+
+            params = {
+                'u_name': user_details.get('username'),
+                'hp': user_details.get('hashed_password'),
+                'email': user_details.get('email'),
+                'phone': user_details.get('phone'),
+                'def_add': user_details.get('default_address','NO_address')
+            }
+
+            result = await conn.execute(user_query, params)
+            row = result.fetchone()
+
+            if row:
+                return row.user_id
+            else:
+                return 0
+
+
+    async def get_user(self, username: int) -> Optional[Dict[str, Any]]:
+        async with self.engine.begin() as conn:
+            Query=text('SELECT * FROM users WHERE username = :username')
+            result=await conn.execute(Query, {'username':username})
             row=result.fetchone()
             if row:
                 return dict(row._mapping)

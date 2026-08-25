@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     langchain_tracing_v2:bool
     langchain_project:str
     langchain_api_key:str
+    secret_key: str
+    algorithm:str
+    access_token_expire_minutes: int
+
     model_config = SettingsConfigDict(env_file=ENV_PATH, env_file_encoding='utf-8', extra='ignore')
 
 settings = Settings()

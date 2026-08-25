@@ -12,7 +12,9 @@ class User(base):
 
     user_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
-    name: Mapped[str] = MappedColumn(String(100))
+    username: Mapped[str] = MappedColumn(String(100))
+
+    hashed_password : Mapped[str] = MappedColumn(String(100))
 
     email: Mapped[str] = MappedColumn(String(100), unique=True)
 
