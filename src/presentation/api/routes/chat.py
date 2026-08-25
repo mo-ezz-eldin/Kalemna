@@ -5,9 +5,10 @@ from fastapi import Depends,APIRouter,Request
 from langgraph.graph.state import CompiledStateGraph
 
 from src.domain.interfaces.ITextClassifier import ITextClassifier
+from src.infrastructure.security.rate_limit import limiter
 from src.infrastructure.security.user_security_credentials import get_current_user
 from src.presentation.api.schemas import ChatRequest
-from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier, get_agent_graph , oauth2_scheme
+from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier, get_agent_graph
 from langchain_core.messages import HumanMessage
 from loguru import logger
 
@@ -82,7 +83,9 @@ async def predict_feeling(
 
 
 @router.post('/chat')
-async def chat(request_message:ChatRequest,
+@limiter.limit('4/minutes')
+async def chat(request: Request,# noqa
+        request_message:ChatRequest,
                graph_app: CompiledStateGraph = Depends(get_agent_graph) ,
                current_user : Dict[str ,str | int] =  Depends(get_current_user)):
     graph = graph_app

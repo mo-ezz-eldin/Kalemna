@@ -22,3 +22,7 @@ def get_agent_graph(request: Request):
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+
+def get_limitation(request:Request):
+    return request.app.state.limiter

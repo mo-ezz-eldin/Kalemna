@@ -4,6 +4,8 @@ import uvicorn
 from loguru import logger
 from src.infrastructure.logging.logger_setup import setup_logging
 from contextlib import asynccontextmanager
+
+from src.infrastructure.security.rate_limit import limiter
 from src.presentation.exceptions.exception_handlers import exception_handler
 from src.application.decision_maker import DecisionMaker
 from src.application.graphs.customer_graph import build_customer_support_graph
@@ -12,12 +14,15 @@ from src.config.settings import settings
 from src.config.Constant import SENTIMENT_LABELS,INTENT_LABELS
 from src.infrastructure.ai_models.intent_model import IntentModel
 from src.infrastructure.ai_models.sentiment_model import SentimentClassifier
-from src.presentation.api.routes.routes import router
+from src.presentation.api.routes.chat import router
 from src.presentation.api.routes.auth import auth_router
 from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
 from src.infrastructure.databases.posgres_db import PosgresDb
 from psycopg_pool import AsyncConnectionPool
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
 
 
 
@@ -28,7 +33,6 @@ async def lifespan_context(app: FastAPI):
 
 
         logger.info('DB, AI Models and Graph are starting.....')
-
         app.state.intent_model = IntentModel(
         model_path=settings.intent_model_path,
         labels_map=INTENT_LABELS,
@@ -105,10 +109,13 @@ async def lifespan_context(app: FastAPI):
 app = FastAPI(lifespan=lifespan_context)
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_methods=["*"], allow_headers=["*"])
 
+app.state.limiter = limiter
+
 app.include_router(router , tags=["Authentication"])
 app.include_router(auth_router ,tags=["AI Support System"] )
 
 app.add_exception_handler(Exception, exception_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 if __name__ == '__main__':
     uvicorn.run("src.presentation.api.app:app", host="127.0.0.1", port=8000, reload=True)
