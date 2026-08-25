@@ -57,5 +57,23 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return {'user_id': user_id , 'username': username}
 
 
+def rate_limit_by_user(request: Request):
+    auth_header = request.headers.get('Authorization')
+    if auth_header and auth_header.startswith('Bearer '):
+        token = auth_header.split(' ')[1]
+        try:
+            payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm] ,
+                                 options={'verify_exp':False})
+            user_id = payload.get('user_id')
+            if user_id:
+                return f'user_id:{user_id}'
+        except Exception:
+            pass
+
+
+    return get_remote_address(request)
+
+
+
 
 
