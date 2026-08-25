@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends , HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
-
 from src.domain.interfaces.IDatabase import IDatabase
 from src.infrastructure.security.user_security_credentials import verify_password, create_access_token, \
     get_password_hash
@@ -26,13 +25,12 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-    encrypted_token = create_access_token({'sub': user.get('username')})
+    encrypted_token = create_access_token({'sub': user.get('username'),
+                                           'user_id': str(user.get('user_id'))})
 
     return Token_Data(access_token=encrypted_token, token_type="Bearer")
 
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
 
 
 @auth_router.post("/signup")
@@ -55,7 +53,7 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
     if not user_id:
         raise HTTPException(status_code=500, detail="Database error occurred")
 
-    encrypted_token = create_access_token({'sub': user_details.username})
+    encrypted_token = create_access_token({'sub': user_details.username , 'user_id': str(user_id)})
 
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,

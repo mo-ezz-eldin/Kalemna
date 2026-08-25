@@ -1,10 +1,11 @@
 from fastapi import Request
+
 from fastapi.security import OAuth2PasswordBearer
 
-from src.application.decision_maker import DecisionMaker
 from src.domain.interfaces.ITextClassifier import ITextClassifier
-from src.application.orchestrator import ChatOrchestrator
+
 from src.domain.interfaces.IDatabase import IDatabase
+
 def get_intent_classifier(request:Request) -> ITextClassifier:
     return request.app.state.intent_model
 
@@ -19,4 +20,5 @@ def get_db(request:Request) -> IDatabase:
 def get_agent_graph(request: Request):
     return request.app.state.graph
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")

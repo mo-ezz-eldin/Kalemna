@@ -3,7 +3,9 @@ from typing import Dict ,Any
 from src.config.settings import settings
 import jwt
 from passlib.context import CryptContext
+from fastapi import Depends, HTTPException , status
 
+from src.presentation.api.dependency import oauth2_scheme
 
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -28,4 +30,32 @@ def verify_password(user_pass :str ,hashed_password : str):
 
 def get_password_hash(password : str):
     return crypt_context.hash(password)
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+
+        username = payload.get("sub")
+
+        user_id = payload.get("user_id")
+
+        if user_id is None or username is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                          detail="could not validate credentials",
+                          headers={"WWW-Authenticate": "Bearer"})
+
+    except jwt.ExpiredSignatureError:
+
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
+
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                          detail="could not validate credentials",
+                          headers={"WWW-Authenticate": "Bearer"})
+
+    return {'user_id': user_id , 'username': username}
+
+
+
 

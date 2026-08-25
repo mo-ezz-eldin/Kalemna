@@ -1,8 +1,11 @@
-from fastapi.responses import StreamingResponse , JSONResponse
+from typing import Dict
+
+from fastapi.responses import StreamingResponse
 from fastapi import Depends,APIRouter,Request
 from langgraph.graph.state import CompiledStateGraph
 
 from src.domain.interfaces.ITextClassifier import ITextClassifier
+from src.infrastructure.security.user_security_credentials import get_current_user
 from src.presentation.api.schemas import ChatRequest
 from src.presentation.api.dependency import get_intent_classifier, get_sentiment_classifier, get_agent_graph , oauth2_scheme
 from langchain_core.messages import HumanMessage
@@ -19,6 +22,7 @@ async def stream_tokens(thread_id: str, user_query: str, graph: CompiledStateGra
         'user_query': user_query,
         'messages': [HumanMessage(content=user_query)],
     }
+
         config = {'configurable': {'thread_id': thread_id}}
 
         logger.info("--- STREAM STARTING ---")
@@ -80,10 +84,10 @@ async def predict_feeling(
 @router.post('/chat')
 async def chat(request_message:ChatRequest,
                graph_app: CompiledStateGraph = Depends(get_agent_graph) ,
-               token : str =  Depends(oauth2_scheme)):
+               current_user : Dict[str ,str | int] =  Depends(get_current_user)):
     graph = graph_app
 
-    thread_id = request_message.user_id
+    thread_id = current_user.get('user_id')
 
     user_query= request_message.text
 
