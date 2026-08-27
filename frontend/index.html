@@ -197,33 +197,40 @@
     </main>
   </div>
 
-  <!-- Auth Guard: redirect to login if not logged in -->
-  <script>
-    (function() {
-      var user = null;
-      try { user = JSON.parse(localStorage.getItem('kalemna_current_user')); } catch(e) {}
-      if (!user) {
-        window.location.href = 'login.html';
-      } else {
-        // Show user profile in header once DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-          var profileEl = document.getElementById('user-profile');
-          var nameEl = document.getElementById('user-profile-name');
-          if (profileEl && nameEl) {
-            nameEl.textContent = user.username;
-            profileEl.style.display = 'flex';
-          }
-          // Logout button
-          var logoutBtn = document.getElementById('btn-logout');
-          if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-              localStorage.removeItem('kalemna_current_user');
-              window.location.href = 'login.html';
-            });
-          }
-        });
-      }
-    })();
+  <!-- Auth Guard: redirect to login if JWT is missing or expired -->
+  <script type="module">
+    import { getAuthData, isTokenExpired, getUserIdFromToken, logoutAndRedirect } from './js/api.js';
+
+    const authData = getAuthData();
+
+    if (!authData || !authData.access_token || isTokenExpired()) {
+      // Not authenticated or token expired → redirect to login
+      logoutAndRedirect();
+    } else {
+      // Authenticated — set up UI
+      const userId = getUserIdFromToken();
+
+      // Store user_id globally for chat.js to use
+      window.__kalemnaUserId = userId;
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // Show user profile in header
+        var profileEl = document.getElementById('user-profile');
+        var nameEl = document.getElementById('user-profile-name');
+        if (profileEl && nameEl) {
+          nameEl.textContent = authData.username;
+          profileEl.style.display = 'flex';
+        }
+
+        // Logout button
+        var logoutBtn = document.getElementById('btn-logout');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', function() {
+            logoutAndRedirect();
+          });
+        }
+      });
+    }
   </script>
   <script type="module" src="js/app.js"></script>
 </body>

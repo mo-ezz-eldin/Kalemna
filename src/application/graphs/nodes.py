@@ -6,7 +6,6 @@ from src.application.prompts.finalize_prompt import FINALIZE_PROMPT
 from src.config.Constant import INTENT_LABELS
 from src.config.intents_metadata import Meta_Data_Intents
 from src.application.decision_maker import DecisionMaker
-from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from src.application.guardrails.output_safety_layer import safety_json_output
 

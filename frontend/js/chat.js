@@ -4,6 +4,7 @@
    ============================================ */
 
 import { sendMessage, sendChatMessage } from './api.js';
+import { getUserIdFromToken } from './api.js';
 import { escapeHTML, relativeTime, renderMarkdownLite, generateId, SENTIMENT_MAP } from './utils.js';
 
 export class ChatEngine {
@@ -14,7 +15,8 @@ export class ChatEngine {
     this.sendBtn = document.getElementById('btn-send');
     this.messages = [];
     this.isProcessing = false;
-    this.conversationId = generateId();
+    // Use real user_id from JWT (set by index.html auth guard or decoded from token)
+    this.conversationId = window.__kalemnaUserId || getUserIdFromToken() || generateId();
     this._timeUpdateInterval = null;
   }
 
@@ -350,7 +352,8 @@ export class ChatEngine {
    */
   newChat() {
     this.messages = [];
-    this.conversationId = generateId();
+    // Keep the same user_id — backend handles conversation history per user
+    this.conversationId = window.__kalemnaUserId || getUserIdFromToken() || generateId();
     this.messagesContainer.innerHTML = '';
     this._showWelcome();
   }

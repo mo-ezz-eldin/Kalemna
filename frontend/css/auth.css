@@ -509,6 +509,28 @@
   box-shadow: 0 0 0 3px hsla(152, 60%, 45%, 0.1) !important;
 }
 
+/* ─── Field-Level Error Messages ─── */
+.auth-form__field-error {
+  display: none;
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  margin-top: var(--space-1);
+  padding-right: var(--space-1);
+  animation: fieldErrorIn 0.25s ease-out;
+  line-height: 1.4;
+}
+
+@keyframes fieldErrorIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ═══════════════════════════════════════════
    PARTICLE CANVAS (reuse from main)
    ═══════════════════════════════════════════ */

@@ -47,6 +47,6 @@ class IDatabase(ABC):
     @abstractmethod
     async def setup_db(self):
         pass
-
+    @abstractmethod
     async def create_user(self,user_details : Dict):
         pass

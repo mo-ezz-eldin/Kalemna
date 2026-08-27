@@ -73,6 +73,7 @@
               minlength="3"
             >
           </div>
+          <span class="auth-form__field-error" id="signup-username-error"></span>
         </div>
 
         <div class="auth-form__group">
@@ -108,6 +109,7 @@
             </div>
             <span class="auth-form__strength-label" id="strength-label"></span>
           </div>
+          <span class="auth-form__field-error" id="signup-password-error"></span>
         </div>
 
         <div class="auth-form__group">
@@ -128,6 +130,51 @@
               autocomplete="new-password"
             >
           </div>
+          <span class="auth-form__field-error" id="signup-confirm-password-error"></span>
+        </div>
+
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="signup-email">البريد الإلكتروني</label>
+          <div class="auth-form__input-wrapper" id="email-wrapper">
+            <span class="auth-form__input-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <input
+              type="email"
+              class="auth-form__input"
+              id="signup-email"
+              name="email"
+              placeholder="أدخل البريد الإلكتروني"
+              required
+              autocomplete="email"
+            >
+          </div>
+          <span class="auth-form__field-error" id="email-error"></span>
+        </div>
+
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="signup-phone">رقم الهاتف</label>
+          <div class="auth-form__input-wrapper" id="phone-wrapper">
+            <span class="auth-form__input-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </span>
+            <input
+              type="tel"
+              class="auth-form__input"
+              id="signup-phone"
+              name="phone"
+              placeholder="مثال: +201234567890"
+              required
+              autocomplete="tel"
+              dir="ltr"
+            >
+          </div>
+          <span class="auth-form__field-error" id="phone-error"></span>
         </div>
 
         <button type="submit" class="auth-form__submit" id="signup-submit">
