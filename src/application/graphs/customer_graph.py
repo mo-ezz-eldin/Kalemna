@@ -18,21 +18,24 @@ from src.application.graphs.nodes import (
 
 #llm | tools (read_from_db completion)
 from src.application.graphs.routes import route_whether_to_final_or_tools, route_after_decide
+from src.domain.interfaces.ILlm import ILlm
+
 
 
 def build_customer_support_graph(orchestrator: ChatOrchestrator,
                                  decision_maker: DecisionMaker,
                                  db: IDatabase,
-                                 chckpointer: AsyncPostgresSaver):
+                                 chckpointer: AsyncPostgresSaver ,
+                                 llm_proxy : ILlm):
     workflow = StateGraph(Customer_State)
 
     my_tools = get_tools(db=db)
 
     intent_node = Intent_Sentiment_Node(orchestrator=orchestrator)
-    judge_node = judge_and_extract_entities(decision_maker=decision_maker)
+    judge_node = judge_and_extract_entities(decision_maker=decision_maker , llm_proxy = llm_proxy)
 
-    decide_node = decide_excute(tools_list=my_tools)
-    final_node = finalize_node()
+    decide_node = decide_excute(tools_list=my_tools , llm_proxy = llm_proxy)
+    final_node = finalize_node(llm_proxy = llm_proxy)
 
     tools_node = ToolNode(my_tools)
 

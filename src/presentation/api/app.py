@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from loguru import logger
+
+from src.infrastructure.ai_models.llm_proxy import LLMProxy
 from src.infrastructure.logging.logger_setup import setup_logging
 from contextlib import asynccontextmanager
 
@@ -32,7 +34,7 @@ async def lifespan_context(app: FastAPI):
     try:
 
 
-        logger.info('DB, AI Models and Graph are starting.....')
+        logger.info('DB, AI Models , LLM and Graph are starting.....')
         app.state.intent_model = IntentModel(
         model_path=settings.intent_model_path,
         labels_map=INTENT_LABELS,
@@ -71,6 +73,11 @@ async def lifespan_context(app: FastAPI):
 
         logger.info('DB with short memory and long memory loaded successfully!')
 
+        app.state.llm_proxy = LLMProxy(primary_provider='google_gemini' , fallback_provider='cohere' ,
+                                       primary_api_key=settings.gemini_api_key , fallback_api_key=settings.cohere_api_key ,
+                                       temperature=0.0)
+
+        logger.info('LLM proxy loaded successfully!')
 
         app.state.graph = build_customer_support_graph(
         orchestrator=ChatOrchestrator(
@@ -80,7 +87,8 @@ async def lifespan_context(app: FastAPI):
         ),
         decision_maker=DecisionMaker(),
         db=app.state.rel_db,
-        chckpointer=app.state.checkpointer
+        chckpointer=app.state.checkpointer ,
+            llm_proxy= app.state.llm_proxy
         )
 
         logger.info("Graph loaded successfully!")
