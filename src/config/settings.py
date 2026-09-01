@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     intent_tokenizer: str
     sentiment_tokenizer: str
     postgres_db_conn: str
+    alembic_conn: str
     langchain_tracing_v2:bool
     langchain_project:str
     langchain_api_key:str
