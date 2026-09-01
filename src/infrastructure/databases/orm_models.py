@@ -28,6 +28,32 @@ class User(base):
     tickets: Mapped[List["Ticket"]] = relationship(back_populates="user", cascade='all, delete-orphan')
 
 
+class Product(base):
+    __tablename__ = 'products'
+
+    product_id :Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
+
+    description: Mapped[str] = MappedColumn(TEXT)
+
+    price : Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
+
+    order_items: Mapped[List["OrderItem"]] = relationship(back_populates="product")
+
+
+class OrderItem(base):
+    __tablename__ = 'order_items'
+
+    order_id: Mapped[int] = MappedColumn(ForeignKey("orders.order_id", ondelete="CASCADE"), primary_key=True)
+    product_id: Mapped[int] = MappedColumn(ForeignKey("products.product_id", ondelete="RESTRICT"), primary_key=True)
+
+    quantity: Mapped[int] = MappedColumn(default=1, nullable=False)
+    unit_price: Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
+
+    order: Mapped["Order"] = relationship(back_populates="items")
+    product: Mapped["Product"] = relationship(back_populates="order_items")
+
+
+
 class Order(base):
     __tablename__ = 'orders'
 
