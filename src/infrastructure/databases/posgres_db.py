@@ -165,3 +165,87 @@ class PosgresDb(IDatabase):
             if row:
                 return row.ticket_id
             return 0
+
+    async def create_product(self, description: str, price: float) -> int:
+        async with self.engine.begin() as conn:
+
+            stmt = insert(Product).values(description=description, price=price).returning(Product.product_id)
+            result = await conn.execute(stmt)
+            return result.scalar()
+
+    async def get_product(self, product_id: int) -> Optional[Dict[str, Any]]:
+        async with self.engine.begin() as conn:
+            stmt = select(Product).where(Product.product_id == product_id)
+            result = await conn.execute(stmt)
+            row = result.fetchone()
+            return dict(row._mapping) if row else None
+
+    async def update_product(self, product_id: int, product_details: Dict):
+        if not product_details:
+            return
+        async with self.engine.begin() as conn:
+            stmt = update(Product).where(Product.product_id == product_id).values(**product_details)
+            await conn.execute(stmt)
+
+    async def delete_product(self, product_id: int):
+        async with self.engine.begin() as conn:
+            stmt = delete(Product).where(Product.product_id == product_id)
+            await conn.execute(stmt)
+
+    async def create_order_items(self, order_id: int, product_id: int, quantity: int, unit_price: float):
+        async with self.engine.begin() as conn:
+            stmt = insert(OrderItem).values(
+                order_id=order_id,
+                product_id=product_id,
+                quantity=quantity,
+                unit_price=unit_price
+            )
+            await conn.execute(stmt)
+
+    async def delete_order_item(self, order_id: int, product_id: int):
+        async with self.engine.begin() as conn:
+            stmt = delete(OrderItem).where(
+                OrderItem.order_id == order_id,
+                OrderItem.product_id == product_id
+            )
+            await conn.execute(stmt)
+
+
+    async def create_order(self, user_id: int, order_data: Dict[str, Any]) -> int:
+        async with self.engine.begin() as conn:
+            User = await self.get_user(user_id)
+            if not User:
+                raise ValueError(f"User with ID {user_id} not found!")
+
+            shipping_address = order_data.get('shipping_address', User.get('default_address'))
+
+
+            order_stmt = insert(Order).values(
+                user_id=user_id,
+                status=order_data.get('status', 'Pending'),
+                expected_delivery_date=order_data.get('expected_delivery_date'),
+                shipping_address=shipping_address,
+                total_amount=order_data.get('total_amount', 0.0)
+            ).returning(Order.order_id)
+
+            result = await conn.execute(order_stmt)
+            new_order_id = result.scalar()
+
+            if not new_order_id:
+                return 0
+
+
+            items = order_data.get('items', [])
+            if items:
+
+                items_data = [{
+                    "order_id": new_order_id,
+                    "product_id": item['product_id'],
+                    "quantity": item.get('quantity', 1),
+                    "unit_price": item['unit_price']
+                } for item in items]
+
+
+                await conn.execute(insert(OrderItem), items_data)
+
+            return new_order_id
