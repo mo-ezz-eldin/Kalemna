@@ -9,8 +9,6 @@ class Settings(BaseSettings):
     sentiment_model_path: str
     intent_tokenizer: str
     sentiment_tokenizer: str
-    corrector_model_path: str
-    corrector_tokenizer: str
     postgres_db_conn: str
     langchain_tracing_v2:bool
     langchain_project:str
