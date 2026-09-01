@@ -74,6 +74,8 @@ class Order(base):
 
     user: Mapped["User"] = relationship(back_populates='orders')
 
+    items: Mapped[List["OrderItem"]] = relationship(back_populates="order", cascade='all, delete-orphan')
+
     invoice: Mapped[Optional["Invoice"]] = relationship(back_populates="order", cascade='all, delete-orphan')
 
     refunds: Mapped[List["Refund"]] = relationship(back_populates="order", cascade='all, delete-orphan')
