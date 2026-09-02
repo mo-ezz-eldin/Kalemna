@@ -20,6 +20,18 @@ def get_tools(db: IDatabase):
         except Exception as e:
             return f"Error reading from database: {str(e)}"
 
+
+    @tool
+    async def cancel_order( order_id: int) -> str:
+        """Use this tool to cancel or delete an entire order.
+        It requires a valid integer 'order_id' extracted from the user's request."""
+        result = await db.delete_order(order_id)
+
+        if result:
+            return f"Order {order_id} has been successfully deleted."
+        else:
+            return f"Could not delete order {order_id}. It may not exist or there was a system error. Please clarify with the user."
+
     # هنا بنرجع اللستة وفيها الأداة وهي جاهزة ومربوطة بالـ db
     return [read_from_db]
 
