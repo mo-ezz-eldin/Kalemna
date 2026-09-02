@@ -220,9 +220,13 @@ class PosgresDb(IDatabase):
         async with self.engine.begin() as conn:
             stmt = delete(OrderItem).where(
                 OrderItem.order_id == order_id,
-                OrderItem.product_id == product_id
-            )
-            await conn.execute(stmt)
+                    OrderItem.product_id == product_id
+                )
+                result = await conn.execute(stmt)
+
+                return result.rowcount > 0
+        except SQLAlchemyError as e:
+            logger.error(f"Database error while deleting order_item order_id : {order_id} and product_id : {product_id}: {e}")
 
 
     async def create_order(self, user_id: int, order_data: Dict[str, Any]) -> int:
