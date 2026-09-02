@@ -99,6 +99,20 @@ class PosgresDb(IDatabase):
             else:
                 return None
 
+    async def delete_order(self , order_id : int):
+        try:
+
+            async with self.engine.begin() as conn:
+                request = delete(Order).where(Order.order_id == order_id)
+                result = await conn.execute(request)
+                return result.rowcount > 0
+
+        except SQLAlchemyError as e:
+            logger.error(f"Database error while deleting order {order_id}: {e}")
+
+            return False
+
+
     async def get_orders_by_user(self, user_id: int) -> List[Dict[str, Any]]:
         async with self.engine.begin() as conn:
             query = text("SELECT * FROM orders WHERE user_id = :u_id")
