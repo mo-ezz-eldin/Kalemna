@@ -10,7 +10,7 @@ class JudgeExtractSchema(BaseModel):
     )
     extracted_entities: Dict[str, str] = Field(
         default_factory=dict,
-        description="Key-value pairs of extracted metadata fields from the user query mapped to their values based on the intent metadata requirement."
+        description="Key-value pairs of extracted metadata. Keys must match the required_metadata for the final_intent. If a value is missing from the user query, set its value to an empty string ''."
     )
     is_misunderstanding: bool = Field(
         description="Set to True if the user query is completely ambiguous, vague, or nonsensical context-wise; otherwise False."
