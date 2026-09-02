@@ -23,7 +23,7 @@ def route_whether_to_final_or_tools(State: Customer_State):
     for key in required_entities:
         value = extracted_entities_dict.get(key)
 
-        if not value or (isinstance(value, list) and len(value) == 0) or (isinstance(value, str) and str(value).strip() == ""):
+        if not value or str(value).strip().lower() in ["", "none", "null", "not provided"]:
             is_missing_required_data = True
             break
 
