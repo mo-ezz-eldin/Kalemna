@@ -79,7 +79,7 @@ class decide_excute():
         details = {
             "final_intent": current_intent,
 
-            "extracted_entities": state.get('extracted_entities', {}).get(current_intent, []),
+            "extracted_entities": state.get('extracted_entities', {}),
 
             "user_id": state.get('user_id', 'Unknown'),
             "messages": state['messages']
