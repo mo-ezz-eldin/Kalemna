@@ -72,3 +72,7 @@ class IDatabase(ABC):
     @abstractmethod
     async def delete_product(self ,product_id : int):
         pass
+
+    @abstractmethod
+    async def delete_order(self, order_id: int):
+        pass
