@@ -118,8 +118,7 @@ class finalize_node():
             value = extracted_entities_dict.get(key)
 
 
-            if not value or (isinstance(value, list) and len(value) == 0) or (
-                    isinstance(value, str) and str(value).strip() == ""):
+            if not value or str(value).strip().lower() in ["", "none", "null", "not provided"]:
                 missing_entities.append(key)
 
         if state.get('num_of_mis_understanding', 0) >= 3:
