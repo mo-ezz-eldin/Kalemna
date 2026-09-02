@@ -1,10 +1,10 @@
 from typing import Optional,Dict, Any,List
-from src.infrastructure.databases.orm_models import base
+from src.infrastructure.databases.orm_models import base , Product , Order , OrderItem
 from src.domain.interfaces.IDatabase import IDatabase
 
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from sqlalchemy import text
+from sqlalchemy import text ,select , delete , insert , update
 
 class PosgresDb(IDatabase):
     def __init__(self,config):
@@ -148,7 +148,7 @@ class PosgresDb(IDatabase):
 
     async def create_ticket(self, user_id: int, issue_type: str, order_id: Optional[int] = None) -> int:
         async with self.engine.begin() as conn:
-            # استخدمنا RETURNING هنا كمان عشان نرجع رقم التيكت اللي اتكريت
+
             query = text("""
                 INSERT INTO tickets (user_id, order_id, issue_type) 
                 VALUES (:u_id, :o_id, :i_type) 

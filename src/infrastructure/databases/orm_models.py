@@ -12,7 +12,7 @@ class User(base):
 
     user_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
-    username: Mapped[str] = MappedColumn(String(100))
+    username: Mapped[str] = MappedColumn(String(100) , unique=True, nullable=False)
 
     hashed_password : Mapped[str] = MappedColumn(String(100))
 
@@ -58,6 +58,7 @@ class Order(base):
     __tablename__ = 'orders'
 
     order_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
+
 
     user_id: Mapped[int] = MappedColumn(ForeignKey("users.user_id"), nullable=False)
 

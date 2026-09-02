@@ -50,3 +50,25 @@ class IDatabase(ABC):
     @abstractmethod
     async def create_user(self,user_details : Dict):
         pass
+
+    @abstractmethod
+    async def create_order_items(self  , order_id :int , product_id : int ,quantity: int, unit_price: float ):
+        pass
+
+    @abstractmethod
+    async def delete_order_item(self , order_id : int  , product_id : int):
+        pass
+    @abstractmethod
+    async def create_product(self ,description : str  , price : float ):
+        pass
+
+    @abstractmethod
+    async def get_product(self ,product_id : int):
+        pass
+    @abstractmethod
+    async def update_product(self , product_id : int , product_details : Dict):
+        pass
+
+    @abstractmethod
+    async def delete_product(self ,product_id : int):
+        pass

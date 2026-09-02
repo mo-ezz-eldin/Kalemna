@@ -17,7 +17,7 @@ from src.domain.interfaces.ILlm import ILlm
 class Intent_Sentiment_Node():
     def __init__(self,orchestrator: ChatOrchestrator):
         self.orchestrator=orchestrator
-    async def __call__(self,state: Customer_State):
+    async def __call__(self,state: Customer_State , config: Dict):
         models_predictions=self.orchestrator.execute(state['user_query'])
         return {
             'predicted_intent':models_predictions['intent_result']['intent'],

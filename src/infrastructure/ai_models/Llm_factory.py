@@ -12,7 +12,7 @@ class LLMHub:
 
         clean_provider = model_type.lower()
 
-        llm_class = LLMHub._registry.get(model_type)
+        llm_class = LLMHub._registry.get(clean_provider)
 
         if not llm_class:
             raise ValueError(f"Provider '{clean_provider}' is not supported in LLMHub.")
