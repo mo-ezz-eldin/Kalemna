@@ -32,6 +32,25 @@ def get_tools(db: IDatabase):
         else:
             return f"Could not delete order {order_id}. It may not exist or there was a system error. Please clarify with the user."
 
+    @tool
+    async def track_order(order_id : int) -> str:
+        """Use this tool when the user wants to track the status of an order.
+    It requires a valid integer 'order_id' extracted from the user's request."""
+        result = await db.get_order(order_id)
+        if result:
+            status = result.get('status', 'Unknown')
+            delivery_date = result.get('expected_delivery_date', 'Not specified')
+            total = result.get('total_amount', '0.0')
+            address = result.get('shipping_address', 'Not specified')
+
+            return (f"Order {order_id} details:\n"
+                    f"- Status: {status}\n"
+                    f"- Expected Delivery: {delivery_date}\n"
+                    f"- Shipping Address: {address}\n"
+                    f"- Total Amount: {total}")
+        else:
+            return f"could not find order {order_id}. Please clarify with the user."
+
     # هنا بنرجع اللستة وفيها الأداة وهي جاهزة ومربوطة بالـ db
     return [read_from_db]
 
