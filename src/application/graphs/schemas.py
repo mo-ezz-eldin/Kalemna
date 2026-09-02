@@ -8,7 +8,7 @@ class JudgeExtractSchema(BaseModel):
     final_sentiment: str = Field(
         description="The validated or corrected sentiment based on the user query. Must match one of the allowed sentiment labels."
     )
-    extracted_entities: Dict[str, List[str]] = Field(
+    extracted_entities: Dict[str, str] = Field(
         default_factory=dict,
         description="Key-value pairs of extracted metadata fields from the user query mapped to their values based on the intent metadata requirement."
     )
