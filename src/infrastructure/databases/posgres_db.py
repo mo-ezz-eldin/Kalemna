@@ -50,6 +50,17 @@ class PosgresDb(IDatabase):
             else:
                 return 0
 
+    async def get_user_by_username(self, username: str) -> Optional[Dict]:
+        async with self.engine.begin() as conn:
+            Query=text('SELECT * FROM users WHERE username = :username')
+            result=await conn.execute(Query, {'username':username})
+            row=result.fetchone()
+            if row:
+                return dict(row._mapping)
+            else:
+                return None
+
+
 
     async def get_user(self, user_id: int) -> Optional[Dict[str, Any]]:
         async with self.engine.begin() as conn:
