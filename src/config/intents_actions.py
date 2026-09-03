@@ -5,11 +5,11 @@ Action_For_Intents={
   "get_invoice": {
     "action": "llm_reply"
   },
-  "track_order": {
+  "track_order": {    #✅
     "action": "llm_reply"
   },
   "get_refund": {
-    "action": "human_escalation"
+    "action": "llm_reply"
   },
   "contact_customer_service": {
     "action": "human_escalation"
@@ -27,7 +27,7 @@ Action_For_Intents={
     "action": "llm_reply"
   },
   "track_refund": {
-    "action": "human_escalation"
+    "action": "llm_reply"
   },
   "delivery_period": {
     "action": "llm_reply"
@@ -36,19 +36,19 @@ Action_For_Intents={
     "action": "llm_reply"
   },
   "change_order": {
-    "action": "human_escalation"
+    "action": "llm_reply"
   },
-  "cancel_order": {
-    "action": "human_escalation"
+  "cancel_order": {     #✅
+    "action": "llm_reply"
   },
   "review": {
     "action": "llm_reply"
   } ,
-    "greeting":{
+    "greeting":{  #✅
         "action" : "llm_reply"
     }
     ,
-    "needing guidance" :
+    "needing guidance" :#✅
         {
             "action" : "llm_reply"
         }

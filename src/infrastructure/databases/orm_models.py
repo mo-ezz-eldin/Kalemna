@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy import String, ForeignKey, Identity, TEXT, DateTime, Numeric, func
+from sqlalchemy import String, ForeignKey, Identity, TEXT, DateTime, Numeric, func, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, MappedColumn, relationship
 
 class base(DeclarativeBase):
@@ -33,6 +33,8 @@ class Product(base):
 
     product_id :Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
+    product_name : Mapped[str] = MappedColumn(String(100), nullable=False)
+
     description: Mapped[str] = MappedColumn(TEXT)
 
     price : Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
@@ -53,23 +55,21 @@ class OrderItem(base):
     product: Mapped["Product"] = relationship(back_populates="order_items")
 
 
-
 class Order(base):
-    __tablename__ = 'orders'
+    __tablename__ = "orders"
 
     order_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
-
-
     user_id: Mapped[int] = MappedColumn(ForeignKey("users.user_id"), nullable=False)
-
-    status: Mapped[str] = MappedColumn(String(50), default='Pending')
-
+    status: Mapped[str] = MappedColumn(String(50), default="Pending")
     order_date: Mapped[datetime] = MappedColumn(DateTime, server_default=func.now())
 
-    expected_delivery_date: Mapped[datetime] = MappedColumn(DateTime, server_default=func.now())
+    # الإضافة الجديدة لـ PostgreSQL هنا:
+    expected_delivery_date: Mapped[datetime] = MappedColumn(
+        DateTime,
+        server_default=text("NOW() + INTERVAL '5 days'")
+    )
 
     shipping_address: Mapped[str] = MappedColumn(TEXT)
-
     total_amount: Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
 
 

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
-from typing import Dict, List
+from typing import Dict, List, Optional
+
 
 class JudgeExtractSchema(BaseModel):
     final_intent: str = Field(

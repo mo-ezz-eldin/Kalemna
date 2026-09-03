@@ -1,8 +1,9 @@
-from typing import Dict
+from typing import Dict, List
 
 from langchain_core.output_parsers import StrOutputParser
 
 from src.application.graphs.state import Customer_State
+from src.application.graphs.tool_calling_per_intent import INTENT_TO_TOOLS_MAP
 from src.application.orchestrator import ChatOrchestrator
 from src.application.prompts.judge_and_extract_entities_prompt import judge_extract_parser, judge_and_extract_entities_template
 from src.application.prompts.decide_excute_prompt import decide_execute_prompt
@@ -69,7 +70,7 @@ class judge_and_extract_entities():
 
 
 class decide_excute():
-    def __init__(self,tools_list , llm_proxy: ILlm):
+    def __init__(self,tools_list:List , llm_proxy: ILlm):
         self.llm_proxy=llm_proxy
         self.tools_list = {tool.name : tool for tool in tools_list}
 
@@ -84,12 +85,11 @@ class decide_excute():
 
             "extracted_entities": state.get('extracted_entities', {}),
 
-            "user_id": state.get('user_id', 'Unknown'),
             "messages": state['messages']
         }
 
         response = await self.llm_proxy.execute_tools(prompt=decide_execute_prompt  ,
-                                                      tools_list=self.tools_list,
+                                                      tools_list=intent_to_tools,
                                                       details=details , config=config )
 
 

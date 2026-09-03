@@ -9,7 +9,7 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
-    async def get_user(self, username: str) -> Optional[Dict[str, Any]]:
+    async def get_user(self, user_id: int) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod
@@ -17,7 +17,7 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
-    async def get_order(self, order_id: int) -> Optional[Dict[str, Any]]:
+    async def get_order(self, user_id , order_id: int) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod
@@ -33,11 +33,11 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
-    async def get_invoice_details(self, order_id: int) -> Optional[Dict[str, Any]]:
+    async def get_invoice_details(self, user_id : int ,order_id: int) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod
-    async def get_refund_status(self, order_id: int) -> Optional[Dict[str, Any]]:
+    async def get_refund_status(self, user_id : int , order_id: int) -> Optional[Dict[str, Any]]:
         pass
 
     @abstractmethod
@@ -74,5 +74,23 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
-    async def delete_order(self, order_id: int):
+    async def get_all_products(self):
+        pass
+
+    @abstractmethod
+    async def get_product_by_name(self, product_name: str):
+        pass
+
+
+    @abstractmethod
+    async def delete_order(self, user_id : int , order_id: int)->bool:
+        pass
+
+    @abstractmethod
+    async def delete_order_items(self , order_id : int)->bool:
+        pass
+
+    @abstractmethod
+    async def modify_order_items(self, order_id: int, items_to_add: List[Dict[str, Any]],
+                                 removed_product_ids: List[int]) -> tuple[bool, str]:
         pass

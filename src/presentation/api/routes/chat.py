@@ -16,10 +16,10 @@ from loguru import logger
 router = APIRouter()
 
 
-async def stream_tokens(thread_id: str, user_query: str, graph: CompiledStateGraph):
+async def stream_tokens(user_id:int ,thread_id: str, user_query: str, graph: CompiledStateGraph):
     try:
         inputs = {
-        'user_id': thread_id,
+        'user_id': user_id,
         'user_query': user_query,
         'messages': [HumanMessage(content=user_query)],
     }
@@ -90,11 +90,13 @@ async def chat(request: Request,# noqa
                current_user : Dict[str ,str | int] =  Depends(get_current_user)):
     graph = graph_app
 
-    thread_id = current_user.get('user_id')
+    thread_id = current_user.get('username')
+
+    user_id = current_user.get('user_id')
 
     user_query= request_message.text
 
-    return StreamingResponse(stream_tokens(thread_id,
+    return StreamingResponse(stream_tokens(user_id,thread_id,
                                            user_query,
                                            graph),
                              media_type='text/event-stream')
