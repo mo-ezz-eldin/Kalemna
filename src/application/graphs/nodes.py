@@ -71,7 +71,7 @@ class judge_and_extract_entities():
 class decide_excute():
     def __init__(self,tools_list , llm_proxy: ILlm):
         self.llm_proxy=llm_proxy
-        self.tools_list = tools_list
+        self.tools_list = {tool.name : tool for tool in tools_list}
 
     async def __call__(self, state: Customer_State,config:dict):
         current_intent = state.get('final_intent', '')
