@@ -75,6 +75,9 @@ class decide_excute():
 
     async def __call__(self, state: Customer_State,config:dict):
         current_intent = state.get('final_intent', '')
+        tools_extracted_from_intent = INTENT_TO_TOOLS_MAP.get(current_intent)
+        intent_to_tools = [self.tools_list.get(name) for name in tools_extracted_from_intent ]
+
 
         details = {
             "final_intent": current_intent,
