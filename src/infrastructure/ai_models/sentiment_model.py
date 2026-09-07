@@ -9,12 +9,22 @@ class SentimentClassifier(ITextClassifier):
         self.labels = labels
         self.model.eval()
     def predict(self,text)->dict:
-        with torch.no_grad():
-            input_ids=self.tokenizer(text,return_tensors='pt',padding=True,truncation=True,max_length=128)['input_ids'].to(self.device)
-            outputs = self.model(input_ids)
-            logits = outputs.logits
-            prob=torch.nn.functional.softmax(logits, dim=-1)
-            confidence,ind=torch.max(prob,dim=-1)
-            feeling=self.labels.get(ind.item(),'unknown')
+
+            inputs=self.tokenizer(text,return_tensors='np',padding=True,truncation=True,max_length=128)
+
+            outputs = self.model(**inputs)
+
+            logits = outputs.logits[0]
+
+            exp_logits = np.exp(logits - np.max(logits))
+
+            probabilities = exp_logits / exp_logits.sum()
+
+            ind=np.argmax(probabilities)
+
+            confidence = probabilities[ind]
+
+            feeling=self.labels.get(int(ind),'unknown')
+
             return {'feeling':feeling,'confidence':confidence.item()}
 
