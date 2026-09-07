@@ -10,7 +10,7 @@ class IntentModel(ITextClassifier):
 
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path).to(self.device)
 
-        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+        self.model =  ORTModelForSequenceClassification.from_pretrained(model_path)
 
         self.model.eval()
 
