@@ -17,8 +17,17 @@ class IntentModel(ITextClassifier):
         self.labels_map = labels_map
 
     def predict(self, text: str) -> dict:
-        input_ids = self.tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=128)[
-            'input_ids'].to(self.device)
+
+        inputs = self.tokenizer(
+            text,
+            return_tensors="np",
+            truncation=True,
+            padding=True,
+            max_length=128
+        )
+
+
+        outputs = self.model(**inputs)
 
         with torch.no_grad():
             outputs = self.model(input_ids)
