@@ -21,6 +21,14 @@ services:
       - ./best-t5small:/kalemna_app/best-t5small
     depends_on:
       - postgres
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
   kalmena_frontend:
     build: ./frontend
     ports:
