@@ -3,9 +3,9 @@ import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 class SentimentClassifier(ITextClassifier):
     def __init__(self,model_path:str,labels:dict,tokenizer_path):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_path).to(self.device)
-        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+
+        self.model = ORTModelForSequenceClassification.from_pretrained(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.labels = labels
         self.model.eval()
     def predict(self,text)->dict:
