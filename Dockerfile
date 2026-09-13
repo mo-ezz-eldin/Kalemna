@@ -4,7 +4,14 @@ WORKDIR /kalemna_app
 
 COPY requirements.txt .
 
-RUN pip install --default-timeout=1000 --no-cache-dir -r requirements.txt
+
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime AS runner
+
+WORKDIR /kalemna_app
+
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 
 COPY . .
 
