@@ -35,7 +35,7 @@ async def login(
 
 @auth_router.post("/signup")
 async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
-    existing_user = await db.get_user(user_details.username)
+    existing_user = await db.get_user_by_username(user_details.username)
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
