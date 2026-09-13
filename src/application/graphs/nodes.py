@@ -108,6 +108,18 @@ class finalize_node():
         final_intent = state.get('final_intent', '')
         final_sentiment = state.get('final_sentiment', '')
 
+        messages = state["messages"]
+        last_message = messages[-1]
+
+
+        if isinstance(last_message, AIMessage):
+
+            draft_response = last_message.content
+            chat_history_for_llm = messages[:-1]
+        else:
+
+            draft_response = "No draft provided. You must answer based strictly on the RULES for Escalation, Unknown Intent, or Missing Info."
+            chat_history_for_llm = messages
 
         required_keys = Meta_Data_Intents.get(final_intent, {}).get("required_metadata", [])
 
