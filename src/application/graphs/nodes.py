@@ -1,5 +1,6 @@
 from typing import Dict, List
 
+from langchain_core.messages import AIMessage
 from langchain_core.output_parsers import StrOutputParser
 
 from src.application.graphs.state import Customer_State
@@ -101,7 +102,7 @@ class finalize_node():
     def __init__(self , llm_proxy: ILlm):
 
         self.llm_proxy = llm_proxy
-        #self.chain = (FINALIZE_PROMPT | llm).with_config({"tags": ["final_responder"]})
+
 
     async def __call__(self, state: Customer_State, config: Dict):
         action = state.get('action')
@@ -143,11 +144,12 @@ class finalize_node():
         details= {
             "action": action,
             "missing_entities": missing_entities,
+            "draft_response": draft_response,
             "final_intent": final_intent,
             "final_sentiment": final_sentiment,
             "num_of_mis_understanding": state.get('num_of_mis_understanding', 0),
             "intents_list": list(INTENT_LABELS.values()),
-            "messages": state['messages']
+            "messages": chat_history_for_llm
         }
         parser = StrOutputParser()
 

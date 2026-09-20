@@ -1,14 +1,20 @@
-from src.domain.interfaces.ITextClassifier import ITextClassifier
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-class SentimentClassifier(ITextClassifier):
-    def __init__(self,model_path:str,labels:dict,tokenizer_path):
+from typing import Any
 
-        self.model = ORTModelForSequenceClassification.from_pretrained(model_path)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+import onnxruntime
+
+from src.domain.interfaces.ITextClassifier import ITextClassifier
+import numpy as np
+from transformers import  AutoTokenizer
+from optimum.onnxruntime import ORTModelForSequenceClassification
+
+class SentimentClassifier(ITextClassifier):
+    def __init__(self,model_path:str,tokenizer_path : str , labels:dict  , ort : onnxruntime.SessionOptions):
+
+        self.model = ORTModelForSequenceClassification.from_pretrained(model_path ,
+                     providers=["CPUExecutionProvider"] , session_options=ort ,file_name='sentiment_quantized_onnx.onnx')
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
         self.labels = labels
-        self.model.eval()
-    def predict(self,text)->dict:
+    def predict(self,text)->dict[str , Any]:
 
             inputs=self.tokenizer(text,return_tensors='np',padding=True,truncation=True,max_length=128)
 
@@ -26,5 +32,5 @@ class SentimentClassifier(ITextClassifier):
 
             feeling=self.labels.get(int(ind),'unknown')
 
-            return {'feeling':feeling,'confidence':confidence.item()}
+            return {'feeling':feeling,'confidence':float(confidence)}
 

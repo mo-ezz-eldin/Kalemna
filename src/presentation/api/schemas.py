@@ -15,3 +15,9 @@ class UserSignup(BaseModel):
     email: EmailStr = Field(..., description="يتحقق من صيغة الإيميل تلقائياً")
     phone: str = Field(..., pattern=r"^\+?[0-9]{10,15}$", description="يسمح بأرقام فقط مع علامة + اختيارية")
     default_address: str = Field(default='NO_address')
+
+
+class ProductSchema(BaseModel):
+    name : str = Field(... ,  description="this is the name of the product")
+    description: str = Field(... , description="this is the description of the product")
+    price : float = Field(..., description="this is the price of the product")

@@ -1,5 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate
 
+
 decide_execute_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are an intelligent Customer Support Execution Agent.
     Your primary responsibility is to fulfill the user's request efficiently and accurately using the tools provided to you.
@@ -22,3 +23,4 @@ decide_execute_prompt = ChatPromptTemplate.from_messages([
     """),
     ("placeholder", "{messages}")
 ])
+decide_execute_prompt.partial(format_instructions=decide_execute_prompt)

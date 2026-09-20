@@ -1,0 +1,8 @@
+{
+    "Average Time taken for pytorch in ms": 12.757487001363188,
+    "Average Time taken for onnx_o2 in ms": 5.758142999839038,
+    "Average Time taken for onnx_o2_quantized in ms": 1.9233300001360476,
+    "ratio of speed of onnx versus pytorch": 2.2155557793058995,
+    "ratio of speed of quantized_ONNX versus pytorch": 6.633020334763551,
+    "ratio of speed of quantized_ONNX versus  usual onnx": 2.993840370311768
+}

@@ -1,18 +1,19 @@
-import torch
+import numpy as np
+import onnxruntime
+from optimum.onnxruntime import ORTModelForSequenceClassification
 from src.domain.interfaces.ITextClassifier import ITextClassifier
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import AutoTokenizer
 
 
 class IntentModel(ITextClassifier):
-    def __init__(self, model_path: str, labels_map: dict,tokenizer_path: str):
+    def __init__(self, model_path: str, labels_map: dict , ort : onnxruntime.SessionOptions):
 
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_path).to(self.device)
+        self.model =  ORTModelForSequenceClassification.from_pretrained(model_path ,
+                      providers=[ "CPUExecutionProvider"] ,session_options=ort , file_name='model_quantized.onnx')
 
-        self.model =  ORTModelForSequenceClassification.from_pretrained(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
 
-        self.model.eval()
 
         self.labels_map = labels_map
 
@@ -29,17 +30,18 @@ class IntentModel(ITextClassifier):
 
         outputs = self.model(**inputs)
 
-        with torch.no_grad():
-            outputs = self.model(input_ids)
-            logits = outputs.logits
 
-            probabilities = torch.nn.functional.softmax(logits, dim=-1)
+        logits = outputs.logits[0]
 
-            confidence, index = torch.max(probabilities[0], dim=-1)
+        exp_logits = np.exp(logits - np.max(logits))
+        probabilities = exp_logits / exp_logits.sum()
 
-            intent_label = self.labels_map.get(index.item(), "Unknown")
+        index = np.argmax(probabilities)
+        confidence = probabilities[index]
 
-            return {
-                'intent': intent_label,
-                'confidence': confidence.item()
-            }
+        intent_label = self.labels_map.get(int(index), "Unknown")
+
+        return {
+            'intent': intent_label,
+            'confidence': float(confidence)
+        }

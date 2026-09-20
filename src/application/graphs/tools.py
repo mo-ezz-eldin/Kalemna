@@ -114,7 +114,7 @@ def get_tools(db: IDatabase):
 
     @tool(args_schema=Place_Order_Schema)
 
-    async def place_order( user_id :Annotated[int , InjectedState('user_id')] , items : List[Dict[str , str | int]] , shipping_address : str) -> str:
+    async def place_order( user_id : int  , items : List[Dict[str , str | int]] , shipping_address : str) -> str:
         """Use this tool to place a new order. Requires items list and shipping address."""
         db_items = []
         total_amount_of_order = 0.0
@@ -160,7 +160,7 @@ def get_tools(db: IDatabase):
 
 
     @tool(args_schema=Change_Order_Schema )
-    async def change_order(user_id : Annotated[int , InjectedState('user_id')] , order_id: int, items_to_add: Optional[List[ItemToAdd]] = None,
+    async def change_order(user_id : int  , order_id: int, items_to_add: Optional[List[ItemToAdd]] = None,
                            items_to_remove: Optional[List[ItemToRemove]] = None ) -> str:
         """Use this tool to add or remove items from an existing order."""
         is_found = await db.get_order(user_id, order_id)
@@ -172,7 +172,7 @@ def get_tools(db: IDatabase):
                 return "No changes requested by the user."
 
             added_products_list = []
-            removed_product_ids = []
+            removed_product_list = []
 
 
             for item in items_to_add:
@@ -192,13 +192,16 @@ def get_tools(db: IDatabase):
                 if not product:
                     return f"Cannot remove item. Product '{item.product_name}' was not found in our catalog."
 
-                removed_product_ids.append(product['product_id'])
-
+                removed_product_list.append({
+                    'product_id': product['product_id'],
+                    'quantity': item.quantity,
+                    'unit_price': product['price']
+                })
 
             success, msg = await db.modify_order_items(
             order_id=order_id,
             items_to_add=added_products_list,
-            removed_product_ids=removed_product_ids
+            removed_product_list=removed_product_list
             )
 
             if success:

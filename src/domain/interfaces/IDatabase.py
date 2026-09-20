@@ -9,6 +9,10 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
+    async def get_user_by_username(self ,username: str) -> Optional[Dict]:
+        pass
+
+    @abstractmethod
     async def get_user(self, user_id: int) -> Optional[Dict[str, Any]]:
         pass
 
@@ -59,7 +63,7 @@ class IDatabase(ABC):
     async def delete_order_item(self , order_id : int  , product_id : int):
         pass
     @abstractmethod
-    async def create_product(self ,description : str  , price : float ):
+    async def create_product(self ,name :str , description : str  , price : float ):
         pass
 
     @abstractmethod
@@ -70,7 +74,7 @@ class IDatabase(ABC):
         pass
 
     @abstractmethod
-    async def delete_product(self ,product_id : int):
+    async def delete_product(self ,product_id : int) ->bool:
         pass
 
     @abstractmethod
@@ -92,5 +96,5 @@ class IDatabase(ABC):
 
     @abstractmethod
     async def modify_order_items(self, order_id: int, items_to_add: List[Dict[str, Any]],
-                                 removed_product_ids: List[int]) -> tuple[bool, str]:
+                                 removed_product_list: List[Dict[str, Any]]) -> tuple[bool, str]:
         pass

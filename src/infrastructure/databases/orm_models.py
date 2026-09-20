@@ -63,7 +63,7 @@ class Order(base):
     status: Mapped[str] = MappedColumn(String(50), default="Pending")
     order_date: Mapped[datetime] = MappedColumn(DateTime, server_default=func.now())
 
-    # الإضافة الجديدة لـ PostgreSQL هنا:
+
     expected_delivery_date: Mapped[datetime] = MappedColumn(
         DateTime,
         server_default=text("NOW() + INTERVAL '5 days'")

@@ -1,5 +1,6 @@
+from langgraph.prebuilt import InjectedState
 from pydantic import BaseModel, Field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Annotated
 
 
 class JudgeExtractSchema(BaseModel):
@@ -20,11 +21,15 @@ class JudgeExtractSchema(BaseModel):
     reasoning : str = Field(
         description="you must explain every choice you made in few words about final_intent , final_sentiment and extracted_entities and is_misunderstanding."
     )
+class verify_tool_executed(BaseModel):
+    is_tool_executed: bool = Field(
+        default_factory=bool,
+        description="use this when the tools is successfully executed and set it with True else False."
+    )
 
 class Place_Order_Schema(BaseModel):
-    user_id: int = Field(
-        description="The user id of the user who made the order. Must be an integer."
-    )
+    user_id: Annotated[int, InjectedState("user_id")]
+
 
     items: List[Dict[str, str | int ]] = Field(
         description="this is a key-value for single item must be 'product_name' and value of this product in English then 'quantity' and its value in integer."
@@ -41,9 +46,13 @@ class ItemToAdd(BaseModel):
 
 class ItemToRemove(BaseModel):
     product_name: str = Field(description="The name of the product the user wants to remove completely.")
+    quantity: int = Field(default=0, description="The quantity to remove if not specified then th user want to remove the product from his order")
 
 
 class Change_Order_Schema(BaseModel):
+    user_id: Annotated[int, InjectedState("user_id")]
+
+
     order_id: int = Field(
         description="The ID of the order that needs to be changed."
     )

@@ -14,4 +14,3 @@ class Customer_State(TypedDict):
     extracted_entities: Dict[str,List[str]]
     action : str
     final_response: str
-    is_tool_called : bool

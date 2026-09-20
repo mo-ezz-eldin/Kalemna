@@ -19,7 +19,7 @@ class Cohere_llm(ILlm):
 
         return response
 
-    async def execute_tools(self, prompt: Any, tools_list: List, details: Dict ,config: Dict ):
+    async def execute_tools(self, prompt: Any, tools_list: List, details: Dict ,config: dict ):
 
         llm_with_tools = self.llm.bind_tools(tools_list)
 

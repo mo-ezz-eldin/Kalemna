@@ -163,10 +163,10 @@ class PosgresDb(IDatabase):
                 return row.ticket_id
             return 0
 
-    async def create_product(self, description: str, price: float) -> int:
+    async def create_product(self, name : str , description: str, price: float) -> int:
         async with self.engine.begin() as conn:
 
-            stmt = insert(Product).values(description=description, price=price).returning(Product.product_id)
+            stmt = insert(Product).values(product_name = name , description=description, price=price).returning(Product.product_id)
             result = await conn.execute(stmt)
             return result.scalar()
 
@@ -178,15 +178,15 @@ class PosgresDb(IDatabase):
             return dict(row._mapping) if row else None
 
     async def get_all_products(self):
-        products_dict = []
         try:
             async with self.engine.begin() as conn:
                 stmt = select(Product)
                 result = await conn.execute(stmt)
-                rows = result.fetchall()
-                return [dict(row) for row in result.mappings()]
+                return [dict(row) for row in result.mappings().all()]
         except SQLAlchemyError as e:
-            logger.error(e)
+            logger.error(f"Database error in get_all_products: {e}")
+            raise e
+
 
     async def get_product_by_name(self, product_name: str):
         try:
@@ -208,14 +208,23 @@ class PosgresDb(IDatabase):
     async def update_product(self, product_id: int, product_details: Dict):
         if not product_details:
             return
-        async with self.engine.begin() as conn:
-            stmt = update(Product).where(Product.product_id == product_id).values(**product_details)
-            await conn.execute(stmt)
+        try:
+            async with self.engine.begin() as conn:
+                stmt = update(Product).where(Product.product_id == product_id).values(**product_details)
+                await conn.execute(stmt)
+        except SQLAlchemyError as e:
+            logger.error(f"Error updating product {product_id}: {e}")
+            raise e
 
-    async def delete_product(self, product_id: int):
-        async with self.engine.begin() as conn:
-            stmt = delete(Product).where(Product.product_id == product_id)
-            await conn.execute(stmt)
+    async def delete_product(self, product_id: int)->bool:
+        try:
+            async with self.engine.begin() as conn:
+                stmt = delete(Product).where(Product.product_id == product_id)
+                result = await conn.execute(stmt)
+                return result.rowcount > 0
+        except SQLAlchemyError as e:
+            logger.error(f"Error deleting product {product_id}: {e}")
+            raise e
 
     async def create_order_items(self, order_id: int, product_id: int, quantity: int, unit_price: float):
         async with self.engine.begin() as conn:
@@ -267,7 +276,6 @@ class PosgresDb(IDatabase):
             order_stmt = insert(Order).values(
                 user_id=user_id,
                 status=order_data.get('status', 'Pending'),
-                expected_delivery_date=order_data.get('expected_delivery_date'),
                 shipping_address=shipping_address,
                 total_amount=order_data.get('total_amount', 0.0)
             ).returning(Order.order_id)
@@ -295,7 +303,7 @@ class PosgresDb(IDatabase):
             return new_order_id
 
     async def modify_order_items(self, order_id: int, items_to_add: List[Dict[str, Any]],
-                                 removed_product_ids: List[int]) -> tuple[bool, str]:
+                                 removed_product_list: List[Dict[str, Any]]) -> tuple[bool, str]:
         try:
             async with self.engine.begin() as conn:
 
@@ -309,12 +317,36 @@ class PosgresDb(IDatabase):
                     return False, f"Cannot change order {order_id} because its status is '{order.status}'."
 
 
-                if removed_product_ids:
-                    del_stmt = delete(OrderItem).where(
+                for item in  removed_product_list:
+                    pid = item['product_id']
+                    qty = item['quantity']
+
+
+
+                    check_stmt = select(OrderItem).where(OrderItem.order_id == order_id, OrderItem.product_id == pid)
+                    chk_res = await conn.execute(check_stmt)
+                    existing_item = chk_res.fetchone()
+
+                    if existing_item:
+
+                        new_qty = existing_item.quantity - qty
+
+                        if new_qty < 0:
+                            return False , f"cannot change quantity of order {order_id} because its quantity is {new_qty} and user already has {qty}."
+
+                        upd_stmt = update(OrderItem).where(
+                            OrderItem.order_id == order_id, OrderItem.product_id == pid
+                        ).values(quantity=new_qty)
+                        await conn.execute(upd_stmt)
+
+                    else:
+
+
+                        del_stmt = delete(OrderItem).where(
                         OrderItem.order_id == order_id,
-                        OrderItem.product_id.in_(removed_product_ids)
+                        OrderItem.product_id==pid
                     )
-                    await conn.execute(del_stmt)
+                        await conn.execute(del_stmt)
 
 
                 for item in items_to_add:

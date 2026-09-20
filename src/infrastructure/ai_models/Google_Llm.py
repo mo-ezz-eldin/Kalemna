@@ -1,7 +1,7 @@
-from typing import Any, List, Optional, Dict, Callable
+from typing import Any, List, Dict, Callable
 from langchain_google_genai import ChatGoogleGenerativeAI
 from src.domain.interfaces.ILlm import ILlm
-from loguru import logger
+
 
 class Google_Llm(ILlm):
     def __init__(self ,temperature : float , secret : str):

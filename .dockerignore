@@ -12,6 +12,8 @@ bayan_model_45000/
 best-t5small/
 best-tokenizer-for-t5-small/
 customer-service-models/
+customer_intents/
+models/
 customer-service-tokenizers/
 t5-small-spell-one-batch-checkpoints/
 t5-small-spell-one_batch/
@@ -26,3 +28,11 @@ glove*.txt
 mlflow.db
 *.log
 checklist.md
+onnx_intent_model/
+onnx_sentiment_model/
+.dev_env
+*.zip
+*.tar.gz
+*.pth
+*.onnx
+*.bin

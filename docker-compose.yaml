@@ -16,9 +16,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./customer_intents:/kalemna_app/customer_intents
-      - ./models:/kalemna_app/models
-      - ./best-t5small:/kalemna_app/best-t5small
+      - ./onnx_intent_model:/kalemna_app/onnx_intent_model
+      - ./onnx_sentiment_model:/kalemna_app/onnx_sentiment_model
     depends_on:
       - postgres
 

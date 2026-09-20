@@ -16,7 +16,7 @@ async def login(
 ) -> Token_Data:
 
 
-    user = await db.get_user(form_data.username)
+    user = await db.get_user_by_username(form_data.username)
 
     if not user or not verify_password(form_data.password, user.get('hashed_password')):
         raise HTTPException(

@@ -52,6 +52,7 @@ class LLMProxy(ILlm):
 
             try:
                 self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature)
+
                 return await self.current_llm.execute_tools(prompt=prompt, tools_list=tools_list, details=details ,config=config)
 
             except Exception as fallback_error:

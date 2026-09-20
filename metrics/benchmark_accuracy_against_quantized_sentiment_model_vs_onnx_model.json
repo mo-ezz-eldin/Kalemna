@@ -1,0 +1,7 @@
+{
+    "PyTorch Accuracy": 76.19047619047619,
+    "ONNX O2 Accuracy": 76.19047619047619,
+    "Quantized INT8 Accuracy": 80.95238095238095,
+    "Accuracy Drop (PT vs Quantized)": -4.761904761904767,
+    "Fidelity (Agreement with Base)": 95.23809523809523
+}

@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Any
 
 from fastapi.responses import StreamingResponse
 from fastapi import Depends,APIRouter,Request
@@ -75,7 +75,7 @@ async def predict_intent(
 async def predict_feeling(
         request: ChatRequest,
         classifier: ITextClassifier = Depends(get_sentiment_classifier)
-)-> dict[str, str]:
+)-> dict[str, Any]:
 
     result = classifier.predict(request.text)
 
