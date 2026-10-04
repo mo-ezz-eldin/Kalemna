@@ -9,7 +9,8 @@ on:
       - main
 
 jobs:
-  test-and-build:
+
+  build_kalemna_app:
     runs-on: ubuntu-latest
 
     steps:
