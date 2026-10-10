@@ -5,8 +5,7 @@ decide_execute_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are an intelligent Customer Support Execution Agent.
     Your primary responsibility is to fulfill the user's request efficiently and accurately using the tools provided to you.
 
-decide_execute_prompt = client.pull_prompt(
-    "decide_execute_prompt" )
+decide_execute_prompt = client.pull_prompt("decide_execute_prompt:staging")
 
     ### TOOL USAGE INSTRUCTIONS STRICT RULES:
     You have been provided with specific tools tailored to the current intent. Follow these rules STRICTLY:
