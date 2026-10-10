@@ -93,7 +93,7 @@ jobs:
 
 
           GITHUB_ACTIONS: "true"
-        run: pytest tests/ -v --cov=src --cov-report=term-missing --cov-fail-under=70
+        run:  python -m pytest tests/ -v --cov=src --cov-report=term-missing --cov-fail-under=70
 
   build_and_push_docker:
     runs-on: ubuntu-latest
