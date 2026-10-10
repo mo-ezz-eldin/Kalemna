@@ -22,26 +22,9 @@ Execute your task based on the following instructions:
 - If the customer's query is things that are in the scope of customer support or intents that listed above and u can't catch details or there is some troubles in user query ,however you know the intent flag it immediately as a misunderstanding (is_misunderstanding: True) , Note that queries like 'how are u' or how you can help or what does this website for. all these are understood.
 - If you are confident that the true intent or sentiment does not exist in the allowed list, mark it as "UNKNOWN".
 
-### 2. NAMED ENTITY EXTRACTION (NER):
-- Scan the customer's 'Raw Query' AND the 'Conversation History' for any specific operational metadata required to fulfill their request.
-- Based on the final intent you determine, extract key entities using these mappings only: {meta_data_intents}
-- Do not hallucinate or guess any entity values. If an entity is not explicitly mentioned in the current query or the history, leave it empty.
-
-### 3. FORMAT INSTRUCTIONS:
-{format_instructions}
-
-### 4. INPUT DATA TO ANALYZE:
-- Conversation History (Context): 
-{chat_history}
-
-- Customer Raw Query (Latest): {user_query}
-- Predicted Intent by ML Model: {predicted_intent}
-- Predicted Sentiment by ML Model: {predicted_sentiment}
-
-### 5. CRITICAL OUTPUT RULES (MUST FOLLOW):
-- You MUST output ONLY a valid, raw JSON object.
-- DO NOT wrap the JSON in markdown blocks (e.g., do not use ```json or ```).
-- Your output must start exactly with {{ and end exactly with }}. Any other text will crash the system."""
+client = Client()
+judge_and_extract_entities_template = client.pull_prompt(
+    "judge_and_extract_prompt:staging"
 )
 
 judge_and_extract_entities_template = judge_and_extract_entities_template.partial(
