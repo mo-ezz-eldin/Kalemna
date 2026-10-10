@@ -68,7 +68,7 @@ jobs:
 
       - name: Run Tests with Coverage
         env:
-
+          PYTHONPATH: .
           TEST_DB_CONN: postgresql+asyncpg://postgres:ci_password_123@localhost:5432/test_db_kalmena
           POSTGRES_DB_CONN: postgresql+asyncpg://postgres:ci_password_123@localhost:5432/test_db_kalmena
           ALEMBIC_CONN: postgresql://postgres:ci_password_123@localhost:5432/test_db_kalmena
