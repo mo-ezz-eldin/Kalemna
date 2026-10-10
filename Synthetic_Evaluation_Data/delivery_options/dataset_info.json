@@ -1,0 +1,30 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "language": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "intent": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "sentiment": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "entities": {
+      "city_or_region": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

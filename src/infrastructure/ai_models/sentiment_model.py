@@ -1,36 +1,43 @@
 from typing import Any
 
+import numpy as np
 import onnxruntime
+from optimum.onnxruntime import ORTModelForSequenceClassification
+from transformers import AutoTokenizer
 
 from src.domain.interfaces.ITextClassifier import ITextClassifier
-import numpy as np
-from transformers import  AutoTokenizer
-from optimum.onnxruntime import ORTModelForSequenceClassification
+
 
 class SentimentClassifier(ITextClassifier):
-    def __init__(self,model_path:str,tokenizer_path : str , labels:dict  , ort : onnxruntime.SessionOptions):
+    def __init__(self, model_path: str, tokenizer_path: str, labels: dict, ort: onnxruntime.SessionOptions):
 
-        self.model = ORTModelForSequenceClassification.from_pretrained(model_path ,
-                     providers=["CPUExecutionProvider"] , session_options=ort ,file_name='sentiment_quantized_onnx.onnx')
+        self.model = ORTModelForSequenceClassification.from_pretrained(
+            model_path,
+            providers=["CPUExecutionProvider"],
+            session_options=ort,
+            file_name="sentiment_quantized_onnx.onnx",
+        )
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
         self.labels = labels
-    def predict(self,text)->dict[str , Any]:
 
-            inputs=self.tokenizer(text,return_tensors='np',padding=True,truncation=True,max_length=128)
+    def predict(self, text) -> dict[str, Any]:
 
-            outputs = self.model(**inputs)
+        inputs = self.tokenizer(text, return_tensors="np", padding=True, truncation=True, max_length=128)
 
-            logits = outputs.logits[0]
+        tokens = {key: np.int64(value) for key, value in inputs.items()}
 
-            exp_logits = np.exp(logits - np.max(logits))
+        outputs = self.model(**tokens)
 
-            probabilities = exp_logits / exp_logits.sum()
+        logits = outputs.logits[0]
 
-            ind=np.argmax(probabilities)
+        exp_logits = np.exp(logits - np.max(logits))
 
-            confidence = probabilities[ind]
+        probabilities = exp_logits / exp_logits.sum()
 
-            feeling=self.labels.get(int(ind),'unknown')
+        ind = np.argmax(probabilities)
 
-            return {'feeling':feeling,'confidence':float(confidence)}
+        confidence = probabilities[ind]
 
+        feeling = self.labels.get(int(ind), "unknown")
+
+        return {"feeling": feeling, "confidence": float(confidence)}

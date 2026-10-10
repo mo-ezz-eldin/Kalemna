@@ -1,19 +1,19 @@
 from fastapi import Request
-
 from fastapi.security import OAuth2PasswordBearer
 
+from src.domain.interfaces.IDatabase import IDatabase
 from src.domain.interfaces.ITextClassifier import ITextClassifier
 
-from src.domain.interfaces.IDatabase import IDatabase
 
-def get_intent_classifier(request:Request) -> ITextClassifier:
+def get_intent_classifier(request: Request) -> ITextClassifier:
     return request.app.state.intent_model
 
-def get_sentiment_classifier(request:Request) -> ITextClassifier:
+
+def get_sentiment_classifier(request: Request) -> ITextClassifier:
     return request.app.state.sentiment_model
 
 
-def get_db(request:Request) -> IDatabase:
+def get_db(request: Request) -> IDatabase:
     return request.app.state.rel_db
 
 
@@ -24,5 +24,5 @@ def get_agent_graph(request: Request):
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 
-def get_limitation(request:Request):
+def get_limitation(request: Request):
     return request.app.state.limiter

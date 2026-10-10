@@ -1,36 +1,34 @@
-from datetime import datetime , timedelta  ,timezone
-from typing import Dict ,Any
+from datetime import datetime, timedelta, timezone
+from typing import Any
 
+import jwt
+from fastapi import Depends, HTTPException, status
+from passlib.context import CryptContext
 
 from src.config.settings import settings
-import jwt
-from passlib.context import CryptContext
-from fastapi import Depends, HTTPException , status ,Request
-
 from src.presentation.api.dependency import oauth2_scheme
 
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def create_access_token(credentials: Dict[str, Any]):
+def create_access_token(credentials: dict[str, Any]):
 
     to_encode = credentials.copy()
 
-
     expires_in = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
 
-    to_encode.update({'exp': expires_in})
+    to_encode.update({"exp": expires_in})
 
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
     return encoded_jwt
 
 
-def verify_password(user_pass :str ,hashed_password : str):
-    return crypt_context.verify(user_pass ,hashed_password )
+def verify_password(user_pass: str, hashed_password: str):
+    return crypt_context.verify(user_pass, hashed_password)
 
 
-def get_password_hash(password : str):
+def get_password_hash(password: str):
     return crypt_context.hash(password)
 
 
@@ -43,24 +41,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         user_id = payload.get("user_id")
 
         if user_id is None or username is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                          detail="could not validate credentials",
-                          headers={"WWW-Authenticate": "Bearer"})
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
     except jwt.ExpiredSignatureError:
-
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
 
     except jwt.PyJWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                          detail="could not validate credentials",
-                          headers={"WWW-Authenticate": "Bearer"})
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    return {'user_id': user_id , 'username': username}
-
-
-
-
-
-
-
+    return {"user_id": user_id, "username": username}

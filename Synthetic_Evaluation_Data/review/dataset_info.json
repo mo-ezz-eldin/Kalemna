@@ -1,0 +1,34 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "language": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "intent": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "sentiment": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "entities": {
+      "rating": {
+        "dtype": "int64",
+        "_type": "Value"
+      },
+      "feedback_text": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

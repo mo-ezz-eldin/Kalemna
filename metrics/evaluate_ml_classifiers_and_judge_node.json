@@ -1,0 +1,93 @@
+{
+    "intent_classification": {
+        "english": {
+            "overall_accuracy": 0.5333333333333333,
+            "macro_precision": 0.6770780145780146,
+            "macro_recall": 0.5333333333333333,
+            "macro_f1": 0.5035987688651958,
+            "total_samples": 150,
+            "per_intent_accuracy": {
+                "place_order": 0.3,
+                "get_invoice": 1.0,
+                "track_order": 0.1,
+                "get_refund": 0.0,
+                "contact_customer_service": 0.9,
+                "delivery_options": 0.8,
+                "complaint": 0.1,
+                "change_shipping_address": 0.7,
+                "check_cancellation_fee": 0.3,
+                "track_refund": 0.8,
+                "delivery_period": 1.0,
+                "check_refund_policy": 0.6,
+                "change_order": 0.3,
+                "cancel_order": 0.6,
+                "review": 0.5
+            }
+        },
+        "arabic": {
+            "overall_accuracy": 0.09333333333333334,
+            "macro_precision": 0.015296597410418548,
+            "macro_recall": 0.09333333333333332,
+            "macro_f1": 0.02443947707105602,
+            "total_samples": 150,
+            "per_intent_accuracy": {
+                "place_order": 0.0,
+                "get_invoice": 0.0,
+                "track_order": 0.0,
+                "get_refund": 0.0,
+                "contact_customer_service": 0.0,
+                "delivery_options": 1.0,
+                "complaint": 0.0,
+                "change_shipping_address": 0.0,
+                "check_cancellation_fee": 0.0,
+                "track_refund": 0.0,
+                "delivery_period": 0.0,
+                "check_refund_policy": 0.0,
+                "change_order": 0.0,
+                "cancel_order": 0.4,
+                "review": 0.0
+            }
+        }
+    },
+    "sentiment_classification": {
+        "english": {
+            "overall_accuracy": 0.4,
+            "macro_precision": 0.3713624338624339,
+            "macro_recall": 0.23731473265634756,
+            "macro_f1": 0.206116247068628,
+            "total_samples": 150
+        },
+        "arabic": {
+            "overall_accuracy": 0.31333333333333335,
+            "macro_precision": 0.07393655136473194,
+            "macro_recall": 0.1402116402116402,
+            "macro_f1": 0.0931861269097803,
+            "total_samples": 150
+        }
+    },
+    "judge_node_evaluation": {
+        "total_samples_evaluated": 300,
+        "total_api_failures": 0,
+        "joint_correct_rate": 0.3,
+        "total_overrides": 203,
+        "correct_overrides": 170,
+        "override_precision": 0.8374384236453202,
+        "structured_entity_value_fields": [
+            "order_id",
+            "rating",
+            "refund_id_or_order_id"
+        ],
+        "strict_entity_value_extraction_f1": 0.6647887323943662,
+        "strict_entity_value_counts": {
+            "true_positives": 118,
+            "false_positives": 77,
+            "false_negatives": 42
+        },
+        "normalized_structured_entity_value_f1": 0.8450704225352113,
+        "normalized_structured_entity_value_counts": {
+            "true_positives": 150,
+            "false_positives": 45,
+            "false_negatives": 10
+        }
+    }
+}

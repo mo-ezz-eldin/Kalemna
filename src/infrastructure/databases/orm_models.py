@@ -1,20 +1,22 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
-from sqlalchemy import String, ForeignKey, Identity, TEXT, DateTime, Numeric, func, text
+from sqlalchemy import TEXT, DateTime, ForeignKey, Identity, Numeric, String, func, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, MappedColumn, relationship
+
 
 class base(DeclarativeBase):
     pass
 
+
 class User(base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     user_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
-    username: Mapped[str] = MappedColumn(String(100) , unique=True, nullable=False)
+    username: Mapped[str] = MappedColumn(String(100), unique=True, nullable=False)
 
-    hashed_password : Mapped[str] = MappedColumn(String(100))
+    hashed_password: Mapped[str] = MappedColumn(String(100))
 
     email: Mapped[str] = MappedColumn(String(100), unique=True)
 
@@ -22,28 +24,27 @@ class User(base):
 
     default_address: Mapped[str] = MappedColumn(TEXT)
 
+    orders: Mapped[list["Order"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
-    orders: Mapped[List["Order"]] = relationship(back_populates="user", cascade='all, delete-orphan')
-
-    tickets: Mapped[List["Ticket"]] = relationship(back_populates="user", cascade='all, delete-orphan')
+    tickets: Mapped[list["Ticket"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 
 class Product(base):
-    __tablename__ = 'products'
+    __tablename__ = "products"
 
-    product_id :Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
+    product_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
-    product_name : Mapped[str] = MappedColumn(String(100), nullable=False)
+    product_name: Mapped[str] = MappedColumn(String(100), nullable=False)
 
     description: Mapped[str] = MappedColumn(TEXT)
 
-    price : Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
+    price: Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
 
-    order_items: Mapped[List["OrderItem"]] = relationship(back_populates="product")
+    order_items: Mapped[list["OrderItem"]] = relationship(back_populates="product")
 
 
 class OrderItem(base):
-    __tablename__ = 'order_items'
+    __tablename__ = "order_items"
 
     order_id: Mapped[int] = MappedColumn(ForeignKey("orders.order_id", ondelete="CASCADE"), primary_key=True)
     product_id: Mapped[int] = MappedColumn(ForeignKey("products.product_id", ondelete="RESTRICT"), primary_key=True)
@@ -63,29 +64,24 @@ class Order(base):
     status: Mapped[str] = MappedColumn(String(50), default="Pending")
     order_date: Mapped[datetime] = MappedColumn(DateTime, server_default=func.now())
 
-
-    expected_delivery_date: Mapped[datetime] = MappedColumn(
-        DateTime,
-        server_default=text("NOW() + INTERVAL '5 days'")
-    )
+    expected_delivery_date: Mapped[datetime] = MappedColumn(DateTime, server_default=text("NOW() + INTERVAL '5 days'"))
 
     shipping_address: Mapped[str] = MappedColumn(TEXT)
     total_amount: Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
 
+    user: Mapped["User"] = relationship(back_populates="orders")
 
-    user: Mapped["User"] = relationship(back_populates='orders')
+    items: Mapped[list["OrderItem"]] = relationship(back_populates="order", cascade="all, delete-orphan")
 
-    items: Mapped[List["OrderItem"]] = relationship(back_populates="order", cascade='all, delete-orphan')
+    invoice: Mapped[Optional["Invoice"]] = relationship(back_populates="order", cascade="all, delete-orphan")
 
-    invoice: Mapped[Optional["Invoice"]] = relationship(back_populates="order", cascade='all, delete-orphan')
+    refunds: Mapped[list["Refund"]] = relationship(back_populates="order", cascade="all, delete-orphan")
 
-    refunds: Mapped[List["Refund"]] = relationship(back_populates="order", cascade='all, delete-orphan')
-
-    tickets: Mapped[List["Ticket"]] = relationship(back_populates="order")
+    tickets: Mapped[list["Ticket"]] = relationship(back_populates="order")
 
 
 class Invoice(base):
-    __tablename__ = 'invoices'
+    __tablename__ = "invoices"
 
     invoice_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
@@ -95,29 +91,27 @@ class Invoice(base):
 
     pdf_url: Mapped[str] = MappedColumn(TEXT, nullable=True)
 
-
     order: Mapped["Order"] = relationship(back_populates="invoice")
 
 
 class Refund(base):
-    __tablename__ = 'refunds'
+    __tablename__ = "refunds"
 
     refund_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
     order_id: Mapped[int] = MappedColumn(ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False)
 
-    status: Mapped[str] = MappedColumn(String(50), default='Initiated')
+    status: Mapped[str] = MappedColumn(String(50), default="Initiated")
 
     refund_amount: Mapped[float] = MappedColumn(Numeric(10, 2), nullable=False)
 
     created_at: Mapped[datetime] = MappedColumn(DateTime, server_default=func.now())
 
-
     order: Mapped["Order"] = relationship(back_populates="refunds")
 
 
 class Ticket(base):
-    __tablename__ = 'tickets'
+    __tablename__ = "tickets"
 
     ticket_id: Mapped[int] = MappedColumn(Identity(always=True, start=1, increment=1), primary_key=True)
 
@@ -127,10 +121,9 @@ class Ticket(base):
 
     issue_type: Mapped[str] = MappedColumn(String(50), nullable=True)
 
-    status: Mapped[str] = MappedColumn(String(50), default='Open')
+    status: Mapped[str] = MappedColumn(String(50), default="Open")
 
     created_at: Mapped[datetime] = MappedColumn(DateTime, server_default=func.now())
-
 
     user: Mapped["User"] = relationship(back_populates="tickets")
 

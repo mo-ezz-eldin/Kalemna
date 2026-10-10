@@ -6,7 +6,6 @@ from langchain_core.messages import AIMessage
 def safety_json_output(ai_content: AIMessage) -> AIMessage:
     raw_content = ai_content.content
 
-
     if isinstance(raw_content, list):
         text_parts = []
         for block in raw_content:
@@ -29,18 +28,18 @@ def safety_json_output(ai_content: AIMessage) -> AIMessage:
     if not text.strip():
         return AIMessage(content=safe_fallback)
 
-
     brackets = 0
     start_idx = -1
 
     for i, char in enumerate(text):
-        if char == '{':
-            if brackets == 0: start_idx = i
+        if char == "{":
+            if brackets == 0:
+                start_idx = i
             brackets += 1
-        elif char == '}':
+        elif char == "}":
             brackets -= 1
             if brackets == 0 and start_idx != -1:
-                candidate = text[start_idx:i + 1]
+                candidate = text[start_idx : i + 1]
                 if '"final_intent"' in candidate:
                     try:
                         json.loads(candidate)
@@ -49,6 +48,3 @@ def safety_json_output(ai_content: AIMessage) -> AIMessage:
                         pass
 
     return AIMessage(content=safe_fallback)
-
-
-

@@ -1,24 +1,28 @@
 import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ENV_PATH = os.path.join(BASE_DIR, ".env")
 
+
 class Settings(BaseSettings):
     intent_model_path: str
     sentiment_model_path: str
-    sentiment_tokenizer : str
+    sentiment_tokenizer: str
     postgres_db_conn: str
+    test_db_conn: str
     alembic_conn: str
-    langchain_tracing_v2:bool
-    langchain_project:str
-    langchain_api_key:str
-    gemini_api_key:str
-    cohere_api_key:str
+    langchain_tracing_v2: bool
+    langchain_project: str
+    langchain_api_key: str
+    gemini_api_key: str
+    cohere_api_key: str
     secret_key: str
-    algorithm:str
+    algorithm: str
     access_token_expire_minutes: int
 
-    model_config = SettingsConfigDict(env_file=ENV_PATH, env_file_encoding='utf-8', extra='ignore')
+    model_config = SettingsConfigDict(env_file=ENV_PATH, env_file_encoding="utf-8", extra="ignore")
+
 
 settings = Settings()

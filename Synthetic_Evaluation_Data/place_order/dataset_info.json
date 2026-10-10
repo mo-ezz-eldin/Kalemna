@@ -1,0 +1,37 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "language": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "intent": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "sentiment": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "entities": {
+      "items": {
+        "feature": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "_type": "List"
+      },
+      "delivery_address": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

@@ -1,0 +1,34 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "language": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "intent": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "sentiment": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "entities": {
+      "order_id": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "items_to_add_or_remove": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

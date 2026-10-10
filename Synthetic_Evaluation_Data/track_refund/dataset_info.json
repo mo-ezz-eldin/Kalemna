@@ -1,0 +1,30 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "language": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "intent": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "sentiment": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "entities": {
+      "refund_id_or_order_id": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field , EmailStr
+from pydantic import BaseModel, EmailStr, Field
+
+
 class ChatRequest(BaseModel):
     text: str = Field(...)
-
 
 
 class Token_Data(BaseModel):
@@ -14,10 +15,10 @@ class UserSignup(BaseModel):
     password: str = Field(..., min_length=6, description="الباسوورد لا يقل عن 6 حروف")
     email: EmailStr = Field(..., description="يتحقق من صيغة الإيميل تلقائياً")
     phone: str = Field(..., pattern=r"^\+?[0-9]{10,15}$", description="يسمح بأرقام فقط مع علامة + اختيارية")
-    default_address: str = Field(default='NO_address')
+    default_address: str = Field(default="NO_address")
 
 
 class ProductSchema(BaseModel):
-    name : str = Field(... ,  description="this is the name of the product")
-    description: str = Field(... , description="this is the description of the product")
-    price : float = Field(..., description="this is the price of the product")
+    name: str = Field(..., description="this is the name of the product")
+    description: str = Field(..., description="this is the description of the product")
+    price: float = Field(..., description="this is the price of the product")

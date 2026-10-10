@@ -5,11 +5,9 @@ class DecisionMaker:
     def __init__(self):
         pass
 
-
     def get_action(self, intent: str) -> dict:
         intent_data = Action_For_Intents.get(intent.lower(), {})
 
-
-        action_name = intent_data.get('action', "")
+        action_name = intent_data.get("action", "")
 
         return {"action": action_name}

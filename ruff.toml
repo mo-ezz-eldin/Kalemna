@@ -1,0 +1,26 @@
+# Ruff configuration for Kalemna project
+target-version = "py310"
+line-length = 120
+
+[lint]
+# Start with a reasonable set of rules, expand over time
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes (unused imports, undefined names, etc.)
+    "I",   # isort (import ordering)
+    "UP",  # pyupgrade (modernize Python syntax)
+]
+
+ignore = [
+    "E501",  # line too long — handled by formatter
+    "F401",  # unused imports — too noisy during development, enable later
+]
+
+[lint.per-file-ignores]
+# Tests can have more relaxed rules
+"tests/**" = ["E711", "E712"]
+# __init__.py files often have unused imports for re-exporting
+"**/__init__.py" = ["F401"]
+
+[format]
+quote-style = "double"
