@@ -11,7 +11,12 @@ RUN uv venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 
-COPY requirements.txt .
+RUN uv pip compile requirements.in \
+    --python-version 3.11 \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
+    -o requirements.txt
+
+
 ENV UV_CACHE_DIR=/root/.cache/uv
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install -v --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
