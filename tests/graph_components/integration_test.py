@@ -64,7 +64,7 @@ async def test_integration(db, intent_model, sentiment_model):
     assert results["messages"][-1].content == "Hello! How can I help you today?"
     assert mock_llm.generate.call_args.kwargs["details"]["missing_entities"] == []
 
-
+@pytest.mark.requires_models
 @pytest.mark.asyncio(loop_scope="session")
 async def test_integration_missing_entity(db, intent_model, sentiment_model):
     query = "please cancel my order"
