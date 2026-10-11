@@ -79,9 +79,9 @@ jobs:
           SENTIMENT_TOKENIZER: FacebookAI/roberta-base
 
 
-          LANGCHAIN_TRACING_V2: "false"
-          LANGCHAIN_PROJECT: ci_test_run
-          LANGCHAIN_API_KEY: ci_dummy_key
+          LANGCHAIN_TRACING_V2: "True"
+          LANGCHAIN_PROJECT: ${{ secrets.LANGCHAIN_PROJECT }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
 
 
           GEMINI_API_KEY: ci_dummy_key
