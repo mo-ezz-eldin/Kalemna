@@ -21,7 +21,6 @@ customer_intents/
 data/
 notebooks/
 *.ipynb
-app.py
 checklist.md
 test_checkpoint.py
 src/presentation/api/logs/kalemna_app.log
