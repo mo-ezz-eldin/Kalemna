@@ -57,7 +57,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
           cache: 'pip'
 
       - name: Install Dependencies
@@ -93,7 +93,7 @@ jobs:
 
 
           GITHUB_ACTIONS: "true"
-        run:  python -m pytest tests/ -v --cov=src --cov-report=term-missing --cov-fail-under=70
+        run:  pytest tests/ -v --cov=src --cov-report=term-missing --cov-fail-under=70
 
   build_and_push_docker:
     runs-on: ubuntu-latest

@@ -499,7 +499,6 @@ toml==0.10.2
     # via streamlit
 tomli==2.5.0
     # via coverage
-torch==2.1.2+cpu
     # via
     #   -r requirements.in
     #   accelerate
