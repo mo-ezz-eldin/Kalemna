@@ -29,7 +29,7 @@ jobs:
           pip install ruff 
 
       - name: Ruff Lint Check
-        run: ruff check src/ tests/
+        run: ruff check 
 
   test_app:
     runs-on: ubuntu-latest
