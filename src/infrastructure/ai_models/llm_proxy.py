@@ -21,6 +21,8 @@ class LLMProxy(ILlm):
 
         self.fallback_provider = fallback_provider
         self.fallback_api_key = fallback_api_key
+        self.fallback2_api_key = fallback2_api_key
+        self.fallback2_provider = fallback2_provider
         self.temperature = temperature
 
         self.current_llm = LLMHub.create_object(primary_provider, primary_api_key, temperature)
