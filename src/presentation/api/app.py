@@ -82,8 +82,9 @@ async def lifespan_context(app: FastAPI):
 
         logger.info('DB with short memory and long memory loaded successfully!')
 
-        app.state.llm_proxy = LLMProxy(primary_provider='google_gemini' , fallback_provider='cohere' ,
-                                       primary_api_key=settings.gemini_api_key , fallback_api_key=settings.cohere_api_key ,
+        app.state.llm_proxy = LLMProxy(primary_provider='local' , fallback_provider='gemini' ,
+                                       fallback2_provider='cohere',
+                                       fallback_api_key=settings.gemini_api_key , fallback2_api_key=settings.cohere_api_key ,
                                        temperature=0.0)
 
         logger.info('LLM proxy loaded successfully!')
