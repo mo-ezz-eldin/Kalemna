@@ -4,7 +4,7 @@ from src.infrastructure.ai_models.Google_Llm import Google_Llm
 
 
 class LLMHub:
-    _registry = {"google_gemini": Google_Llm, "cohere": Cohere_llm}
+    _registry = {"google_gemini": Google_Llm, "cohere": Cohere_llm , "local": LocalLlm}
 
     @staticmethod
     def create_object(model_type: str, secret: str | None, temperature: float) -> ILlm:
