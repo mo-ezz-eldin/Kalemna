@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     langchain_tracing_v2: bool
     langchain_project: str
     langchain_api_key: str
+    openai_url : str
     gemini_api_key: str
     cohere_api_key: str
     secret_key: str
