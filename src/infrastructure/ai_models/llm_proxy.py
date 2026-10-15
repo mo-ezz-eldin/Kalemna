@@ -25,7 +25,7 @@ class LLMProxy(ILlm):
         self.fallback2_provider = fallback2_provider
         self.temperature = temperature
 
-        self.current_llm = LLMHub.create_object(primary_provider, primary_api_key, temperature)
+        self.current_llm = LLMHub.create_object(primary_provider, secret='kalemna_llm_assistant', temperature = temperature)
 
     async def generate(self, prompt: Any, parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
         try:
