@@ -13,7 +13,8 @@ class LLMProxy(ILlm):
         self,
         primary_provider: str,
         fallback_provider: str,
-        primary_api_key: str,
+        fallback2_provider: str,
+        fallback2_api_key: str,
         fallback_api_key: str,
         temperature: float,
     ):
