@@ -17,4 +17,6 @@ class LLMHub:
         if not llm_class:
             raise ValueError(f"Provider '{clean_provider}' is not supported in LLMHub.")
 
-        return llm_class(temperature=temperature, secret=secret)
+            return llm_class(temperature=temperature, secret=secret , url=url)
+        else:
+            return llm_class(temperature=temperature, secret=secret )
