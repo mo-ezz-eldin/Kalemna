@@ -1,6 +1,7 @@
 from src.domain.interfaces.ILlm import ILlm
 from src.infrastructure.ai_models.Cohere_llm import Cohere_llm
 from src.infrastructure.ai_models.Google_Llm import Google_Llm
+from src.infrastructure.ai_models.local_llm import LocalLlm
 
 
 class LLMHub:
