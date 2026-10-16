@@ -30,3 +30,4 @@ onnx_intent_model/
 onnx_sentiment_model/
 .dev_env
 benchmarks/evaluate_human_escalation_rate.csv
+full_assessment_v2.md

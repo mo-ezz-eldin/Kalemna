@@ -12,20 +12,21 @@ class LLMProxy(ILlm):
     def __init__(
         self,
         primary_provider: str,
+        url : str,
         fallback_provider: str,
         fallback2_provider: str,
         fallback2_api_key: str,
         fallback_api_key: str,
         temperature: float,
     ):
-
+        self.url = url
         self.fallback_provider = fallback_provider
         self.fallback_api_key = fallback_api_key
         self.fallback2_api_key = fallback2_api_key
         self.fallback2_provider = fallback2_provider
         self.temperature = temperature
 
-        self.current_llm = LLMHub.create_object(primary_provider, secret='kalemna_llm_assistant', temperature = temperature)
+        self.current_llm = LLMHub.create_object(primary_provider, secret='kalemna_llm_assistant', temperature = temperature ,  url = self.url)
 
     async def generate(self, prompt: Any, parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
         try:
@@ -40,16 +41,31 @@ class LLMProxy(ILlm):
                 f" loading fallback LLM : {self.fallback_provider} there is an error happened in primary LLM due to {e}"
             )
 
-            try:
-                self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature)
+        try:
+                self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature , url = None)
+                async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
+                    with attempt:
+                        return await self.current_llm.generate(
+                        prompt=prompt, guardrails=guardrails, parser=parser, details=details, config=config
+                    )
 
-                return await self.current_llm.generate(
-                    prompt=prompt, guardrails=guardrails, parser=parser, details=details, config=config
+        except Exception as second_error_fallback:
+                logger.error(
+                    f" loading fallback LLM : {self.fallback2_provider} there is an error happened in first fallback LLM due to {second_error_fallback}"
                 )
+        try:
+                    self.current_llm = LLMHub.create_object(self.fallback2_provider, self.fallback2_api_key,
+                                                            self.temperature , url =None)
+                    async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
+                        with attempt:
+                            return await self.current_llm.generate(
+                                prompt=prompt, guardrails=guardrails, parser=parser, details=details, config=config
+                            )
 
-            except Exception as fallback_error:
-                logger.critical(f"disaster error in fallback LLM due to {fallback_error}")
-                raise RuntimeError("All LLM Providers failed. Trigger Human Handoff or Safe Default.")
+        except Exception as fallback_error:
+
+                    logger.critical(f"disaster error in fallback LLM due to {fallback_error}")
+                    raise RuntimeError("All LLM Providers failed. Trigger Human Handoff or Safe Default.")
 
     async def execute_tools(self, prompt: Any, tools_list: list, details: dict, config: dict):
         try:
@@ -65,12 +81,28 @@ class LLMProxy(ILlm):
             )
 
             try:
-                self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature)
-
-                return await self.current_llm.execute_tools(
+                self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature , url =None)
+                async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
+                    with attempt:
+                        return await self.current_llm.execute_tools(
                     prompt=prompt, tools_list=tools_list, details=details, config=config
+                    )
+
+            except Exception as se_error:
+                logger.error(
+                    f"loading fallback LLM : {self.fallback2_provider} there is an error happened in our first fallback LLM due to {se_error}"
                 )
 
-            except Exception as fallback_error:
-                logger.critical(f"disaster error in fallback LLM due to {fallback_error}")
+            try:
+                    self.current_llm = LLMHub.create_object(self.fallback2_provider, self.fallback2_api_key,
+                                                            self.temperature, url = None)
+                    async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
+                        with attempt:
+                            return await self.current_llm.execute_tools(
+                                prompt=prompt, tools_list=tools_list, details=details, config=config
+                            )
+
+            except Exception as final_error:
+
+                logger.critical(f"disaster error in fallback LLM due to {final_error}")
                 raise RuntimeError("All LLM Providers failed during tool execution.")

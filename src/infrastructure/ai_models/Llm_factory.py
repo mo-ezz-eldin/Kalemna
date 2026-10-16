@@ -8,7 +8,7 @@ class LLMHub:
     _registry = {"google_gemini": Google_Llm, "cohere": Cohere_llm , "local": LocalLlm}
 
     @staticmethod
-    def create_object(model_type: str, secret: str | None, temperature: float) -> ILlm:
+    def create_object(model_type: str, secret: str | None, temperature: float , url : str | None ) -> ILlm:
 
         clean_provider = model_type.lower()
 
@@ -16,6 +16,7 @@ class LLMHub:
 
         if not llm_class:
             raise ValueError(f"Provider '{clean_provider}' is not supported in LLMHub.")
+        if clean_provider == "local":
 
             return llm_class(temperature=temperature, secret=secret , url=url)
         else:

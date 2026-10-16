@@ -575,5 +575,6 @@ xxhash==4.0.1
     #   evaluate
 yarl==1.25.1
     # via aiohttp
+openai
 
 langchain-openai

@@ -18,6 +18,8 @@ langchain-core>=0.2.0,<0.3.0
 langgraph>=0.2.0,<0.3.0
 langgraph-checkpoint-postgres>=1.0.0,<2.0.0
 langchain-google-genai
+openai
+langchain-openai
 langsmith
 loguru
 streamlit==1.55.0

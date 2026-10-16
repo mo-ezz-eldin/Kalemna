@@ -1,33 +1,31 @@
-import onnxruntime
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-from loguru import logger
-
-from src.infrastructure.ai_models.llm_proxy import LLMProxy
-from src.infrastructure.logging.logger_setup import setup_logging
 from contextlib import asynccontextmanager
 
-from src.infrastructure.security.rate_limit import limiter
-from src.presentation.api.routes.adminstration import db_management_router
-from src.presentation.exceptions.exception_handlers import exception_handler
-from src.application.decision_maker import DecisionMaker
-from src.application.graphs.customer_graph import build_customer_support_graph
-from src.application.orchestrator import ChatOrchestrator
-from src.config.settings import settings
-from src.config.Constant import SENTIMENT_LABELS,INTENT_LABELS
-from src.infrastructure.ai_models.intent_model import IntentModel
-from src.infrastructure.ai_models.sentiment_model import SentimentClassifier
-from src.presentation.api.routes.chat import router
-from src.presentation.api.routes.auth import auth_router
-from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
-from src.infrastructure.databases.posgres_db import PosgresDb
-from psycopg_pool import AsyncConnectionPool
+import onnxruntime
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from loguru import logger
+from psycopg_pool import AsyncConnectionPool
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-
+from src.application.decision_maker import DecisionMaker
+from src.application.graphs.customer_graph import build_customer_support_graph
+from src.application.orchestrator import ChatOrchestrator
+from src.config.Constant import INTENT_LABELS, SENTIMENT_LABELS
+from src.config.settings import settings
+from src.infrastructure.ai_models.intent_model import IntentModel
+from src.infrastructure.ai_models.llm_proxy import LLMProxy
+from src.infrastructure.ai_models.sentiment_model import SentimentClassifier
+from src.infrastructure.databases.posgres_db import PosgresDb
+from src.infrastructure.logging.logger_setup import setup_logging
+from src.infrastructure.preprocessing.preprocessing import TextPreprocessor
+from src.infrastructure.security.rate_limit import limiter
+from src.presentation.api.routes.adminstration import db_management_router
+from src.presentation.api.routes.auth import auth_router
+from src.presentation.api.routes.chat import router
+from src.presentation.exceptions.exception_handlers import exception_handler
 
 
 @asynccontextmanager
@@ -82,7 +80,7 @@ async def lifespan_context(app: FastAPI):
 
         logger.info('DB with short memory and long memory loaded successfully!')
 
-        app.state.llm_proxy = LLMProxy(primary_provider='local' , fallback_provider='gemini' ,
+        app.state.llm_proxy = LLMProxy(primary_provider='local' ,  url = settings.openai_url , fallback_provider='google_gemini' ,
                                        fallback2_provider='cohere',
                                        fallback_api_key=settings.gemini_api_key , fallback2_api_key=settings.cohere_api_key ,
                                        temperature=0.0)
