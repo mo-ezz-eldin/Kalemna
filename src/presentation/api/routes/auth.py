@@ -43,6 +43,9 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
     user_dict = user_details.model_dump()
 
     raw_password = user_dict.pop("password")
+
+    start_time_to_hash_password = time.perf_counter()
+
     user_dict["hashed_password"] = get_password_hash(raw_password)
 
     user_id = await db.create_user(user_dict)
