@@ -54,6 +54,8 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
 
     user_id = await db.create_user(user_dict)
 
+    logger.debug(f'time for creating new user: {time.perf_counter() - start_time_to_create_new_user}')
+
     if not user_id:
         raise HTTPException(status_code=500, detail="Database error occurred")
 
