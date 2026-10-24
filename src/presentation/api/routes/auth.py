@@ -46,7 +46,7 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
 
     start_time_to_hash_password = time.perf_counter()
 
-    user_dict["hashed_password"] = get_password_hash(raw_password)
+    user_dict["hashed_password"] = await run_in_threadpool(get_password_hash(raw_password))
 
     logger.debug(f'time for hashing password :{time.perf_counter() - start_time_to_hash_password} ')
 
