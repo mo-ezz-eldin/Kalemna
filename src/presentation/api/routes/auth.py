@@ -63,6 +63,11 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
 
     encrypted_token = create_access_token({"sub": user_details.username, "user_id": str(user_id)})
 
+    logger.debug(f'time for creating new token: {time.perf_counter() - time_to_create_jwt_token} ')
+
+    logger.debug(f'time for signup db + hashing + jwt encoding: {time.perf_counter() - start_time_to_get_from_db_an_existing_user} ')
+
+
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,
         content={"message": "User created successfully", "access_token": encrypted_token},
