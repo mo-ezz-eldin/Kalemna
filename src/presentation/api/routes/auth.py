@@ -48,6 +48,10 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
 
     user_dict["hashed_password"] = get_password_hash(raw_password)
 
+    logger.debug(f'time for hashing password :{time.perf_counter() - start_time_to_hash_password} ')
+
+    start_time_to_create_new_user = time.perf_counter()
+
     user_id = await db.create_user(user_dict)
 
     if not user_id:
