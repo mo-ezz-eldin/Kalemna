@@ -59,6 +59,8 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
     if not user_id:
         raise HTTPException(status_code=500, detail="Database error occurred")
 
+    time_to_create_jwt_token = time.perf_counter()
+
     encrypted_token = create_access_token({"sub": user_details.username, "user_id": str(user_id)})
 
     return JSONResponse(
