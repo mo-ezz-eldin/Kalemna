@@ -33,6 +33,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: IDatabase 
 
 @auth_router.post("/signup")
 async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
+    start_time_to_get_from_db_an_existing_user  = time.perf_counter()
     existing_user = await db.get_user_by_username(user_details.username)
     if existing_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exists")
