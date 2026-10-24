@@ -38,6 +38,8 @@ async def signup(user_details: UserSignup, db: IDatabase = Depends(get_db)):
     if existing_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exists")
 
+    logger.debug(f"time for getting an existing user: {time.perf_counter() - start_time_to_get_from_db_an_existing_user}")
+
     user_dict = user_details.model_dump()
 
     raw_password = user_dict.pop("password")
