@@ -6,7 +6,7 @@ from src.config.intents_metadata import Meta_Data_Intents
 def route_whether_to_final_or_tools(State: Customer_State):
     final_intent = State.get("final_intent", "").lower()
 
-    if State.get("action") == "human_escalation" or final_intent == "greeting" or final_intent == "needing guidance":
+    if State.get("action") == "human_escalation" or final_intent in INTENTS_CONFIGURED_WITOUT_NEEDING_TOOLS:
         return "finalize"
 
     num_of_mis_understanding = State.get("num_of_mis_understanding", 0)
