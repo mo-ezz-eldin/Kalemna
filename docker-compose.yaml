@@ -45,6 +45,28 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus_config.yaml'
       - '--storage.tsdb.path=/prometheus'
+      - '--enable-feature=envvar-expansion'
+    depends_on:
+      - kalemna_backend
+
+  cadvisor:
+      image: gcr.io/cadvisor/cadvisor:v0.49.1
+      ports:
+        - "8080:8080"
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:rw
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres
 
 
 volumes:
