@@ -30,3 +30,25 @@ class LocalLlm(ILlm):
 
         return response
 
+
+    async def generate_with_structured_output(self , prompt:Any ,schema:Any , parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
+        structured_llm = self.llm.with_structured_output(
+                schema=schema,
+                method="json_schema",
+                strict=True,
+                include_raw=True,
+                temperature=0.7,
+                extra_body={
+        "chat_template_kwargs": {
+
+                "enable_thinking": False,
+            }
+        }
+    )
+        chain = prompt | structured_llm | parser | guardrails
+
+        response = await chain.ainvoke(details, config=config)
+
+
+        return response
+
