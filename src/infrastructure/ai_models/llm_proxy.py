@@ -107,41 +107,7 @@ class LLMProxy(ILlm):
                                                  guardrails=guardrails)
 
     async def execute_tools(self, prompt: Any, tools_list: list, details: dict, config: dict):
-        try:
-            async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
-                with attempt:
-                    return await self.current_llm.execute_tools(
-                        prompt=prompt, tools_list=tools_list, details=details, config=config
-                    )
-
-        except Exception as e:
-            logger.error(
-                f"loading fallback LLM : {self.fallback_provider} there is an error happened in primary LLM due to {e}"
-            )
-
-            try:
-                self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature , url =None)
-                async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
-                    with attempt:
-                        return await self.current_llm.execute_tools(
-                    prompt=prompt, tools_list=tools_list, details=details, config=config
-                    )
-
-            except Exception as se_error:
-                logger.error(
-                    f"loading fallback LLM : {self.fallback2_provider} there is an error happened in our first fallback LLM due to {se_error}"
-                )
-
-            try:
-                    self.current_llm = LLMHub.create_object(self.fallback2_provider, self.fallback2_api_key,
-                                                            self.temperature, url = None)
-                    async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
-                        with attempt:
-                            return await self.current_llm.execute_tools(
-                                prompt=prompt, tools_list=tools_list, details=details, config=config
-                            )
-
-            except Exception as final_error:
-
-                logger.critical(f"disaster error in fallback LLM due to {final_error}")
-                raise RuntimeError("All LLM Providers failed during tool execution.")
+        return await self._execute_with_fallback(
+            "execute_tools",
+            prompt=prompt, tools_list=tools_list, details=details, config=config
+        )
