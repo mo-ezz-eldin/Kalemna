@@ -28,7 +28,7 @@ class LLMProxy(ILlm):
 
         self.current_llm = LLMHub.create_object(primary_provider, secret='kalemna_llm_assistant', temperature = temperature ,  url = self.url)
 
-    async def generate(self, prompt: Any, parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
+    async def generate(self , prompt:Any ,schema:Any , parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
         try:
             async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
                 with attempt:
