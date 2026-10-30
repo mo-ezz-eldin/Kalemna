@@ -578,3 +578,7 @@ yarl==1.25.1
 openai
 
 langchain-openai
+
+prometheus_fastapi_instrumentator==8.1.0
+
+gunicorn==26.2.0
