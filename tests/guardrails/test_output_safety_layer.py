@@ -6,7 +6,7 @@ from langchain_core.messages import AIMessage
 from src.application.guardrails.output_safety_layer import safety_json_output
 
 SAFE_FALLBACK = (
-    '{"final_intent": "UNKNOWN", "final_sentiment": "neutral", "extracted_entities": {}, "is_misunderstanding": true}'
+    '{"final_intent": "UNKNOWN", "final_sentiment": "neutral", "extracted_entities": {}, "reasoning" : "unreasonable content" , "is_misunderstanding": true}'
 )
 
 
