@@ -23,7 +23,7 @@ def safety_json_output(ai_content: AIMessage) -> AIMessage:
     else:
         text = str(raw_content)
 
-    safe_fallback = '{"final_intent": "UNKNOWN", "final_sentiment": "neutral", "extracted_entities": {}, "is_misunderstanding": true}'
+    safe_fallback = '{"final_intent": "UNKNOWN", "final_sentiment": "neutral", "extracted_entities": {}, "reasoning" : "unreasonable content" , "is_misunderstanding": true}'
 
     if not text.strip():
         return AIMessage(content=safe_fallback)
