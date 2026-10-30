@@ -98,43 +98,13 @@ class LLMProxy(ILlm):
         raise RuntimeError("All LLM Providers failed. Trigger Human Handoff or Safe Default.")
 
     async def generate(self , prompt:Any ,schema:Any , parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
-        try:
-            async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
-                with attempt:
-                    return await self.current_llm.generate(
-                        prompt=prompt, guardrails=guardrails, parser=parser, details=details, config=config
-                    )
-
-        except Exception as e:
-            logger.error(
-                f" loading fallback LLM : {self.fallback_provider} there is an error happened in primary LLM due to {e}"
-            )
-
-        try:
-                self.current_llm = LLMHub.create_object(self.fallback_provider, self.fallback_api_key, self.temperature , url = None)
-                async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
-                    with attempt:
-                        return await self.current_llm.generate(
-                        prompt=prompt, guardrails=guardrails, parser=parser, details=details, config=config
-                    )
-
-        except Exception as second_error_fallback:
-                logger.error(
-                    f" loading fallback LLM : {self.fallback2_provider} there is an error happened in first fallback LLM due to {second_error_fallback}"
-                )
-        try:
-                    self.current_llm = LLMHub.create_object(self.fallback2_provider, self.fallback2_api_key,
-                                                            self.temperature , url =None)
-                    async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
-                        with attempt:
-                            return await self.current_llm.generate(
-                                prompt=prompt, guardrails=guardrails, parser=parser, details=details, config=config
-                            )
-
-        except Exception as fallback_error:
-
-                    logger.critical(f"disaster error in fallback LLM due to {fallback_error}")
-                    raise RuntimeError("All LLM Providers failed. Trigger Human Handoff or Safe Default.")
+        return await self._execute_with_fallback(method_name='generate' ,
+                                                 prompt=prompt ,
+                                                 schema =schema ,
+                                                 parser = parser ,
+                                                 details=details,
+                                                 config=config,
+                                                 guardrails=guardrails)
 
     async def execute_tools(self, prompt: Any, tools_list: list, details: dict, config: dict):
         try:
