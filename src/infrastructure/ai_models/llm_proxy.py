@@ -28,6 +28,21 @@ class LLMProxy(ILlm):
 
         self.current_llm = LLMHub.create_object(primary_provider, secret='kalemna_llm_assistant', temperature = temperature ,  url = self.url)
 
+        self.providers_chain = [
+            {"name": primary_provider, "api_key": "kalemna_llm_assistant", "url": url},
+            {"name": fallback_provider, "api_key": fallback_api_key, "url": None},
+            {"name": fallback2_provider, "api_key": fallback2_api_key, "url": None},
+        ]
+
+
+        self.circuit_breaker = {
+            primary_provider: 0,
+            fallback_provider: 0,
+            fallback2_provider: 0
+        }
+
+        self.cooldown_seconds = 60
+
     async def generate(self , prompt:Any ,schema:Any , parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
         try:
             async for attempt in AsyncRetrying(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2)):
