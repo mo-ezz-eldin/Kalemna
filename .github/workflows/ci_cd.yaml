@@ -60,6 +60,7 @@ jobs:
         with:
             version: "0.5.11"
             enable-cache: true
+            cache-dependency-glob: "requirements.in"
 
       - name: Set up Python
         uses: actions/setup-python@v5
