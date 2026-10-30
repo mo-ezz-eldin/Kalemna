@@ -41,7 +41,61 @@ class LLMProxy(ILlm):
             fallback2_provider: 0
         }
 
-        self.cooldown_seconds = 60
+        self.cooldown_seconds = 240
+
+    async def _execute_with_fallback(self, method_name: str, **kwargs):
+
+        for provider_config in self.providers_chain:
+            provider_name = provider_config["name"]
+
+            # لو الوقت الحالي أصغر من وقت السماح، معناه إن الموديل ده واقع (Open)
+            if time.time() < self.circuit_breaker[provider_name]:
+                logger.warning(f"Circuit Breaker is OPEN for {provider_name}. Skipping to next provider...")
+                continue
+
+
+            try:
+
+                llm_instance = LLMHub.create_object(
+                    provider_name,
+                    secret=provider_config["api_key"],
+                    temperature=self.temperature,
+                    url=provider_config["url"]
+                )
+
+                is_half_open = self.circuit_breaker[provider_name] != 0
+
+                num_of_retries = 1 if is_half_open else 3
+
+                async for attempt in AsyncRetrying(stop=stop_after_attempt(num_of_retries), wait=wait_exponential(multiplier=2)):
+                    with attempt:
+                        logger.info(f"Executing {method_name} using {provider_name}...")
+
+                        method = getattr(llm_instance, method_name)
+
+                        response =  await method(**kwargs)
+
+                        if is_half_open:
+
+                            logger.success(f"{provider_name} is BACK ONLINE! Closing Circuit Breaker.")
+
+                            self.circuit_breaker[provider_name] = 0.0
+
+                        return response
+
+
+
+
+            except Exception as e:
+
+                logger.error(f"{provider_name} failed all attempts due to: {e}. Opening Circuit Breaker!")
+
+                self.circuit_breaker[provider_name] = time.time() + self.cooldown_seconds
+
+                continue
+
+        logger.critical("Disaster! ALL LLM Providers in the chain failed or are currently OPEN.")
+        raise RuntimeError("All LLM Providers failed. Trigger Human Handoff or Safe Default.")
 
     async def generate(self , prompt:Any ,schema:Any , parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
         try:
