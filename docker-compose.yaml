@@ -22,7 +22,6 @@ services:
       - ./onnx_sentiment_model:/kalemna_app/onnx_sentiment_model
     depends_on:
       - postgres
-    command: gunicorn src.presentation.api.app:app --host 0.0.0.0 --port 8000 --workers 4
 
   kalmena_frontend:
     image: ${DOCKER_USERNAME:-mezz76748}/kalmena_frontend:latest
@@ -33,19 +32,20 @@ services:
       - kalemna_backend
 
   prometheus_monitor:
-    image: prom/prometheus@sha256:fa3302279710be2f21a8301ec17a8b4f2301fd829bd113839b3b6b02b6f191a2
+    image: prom/prometheus:latest
 
     ports:
       - "9090:9090"
 
+    environment:
+      - OPENAI_URL=${OPENAI_URL}
     volumes:
       - prom_data:/prometheus
-      - ./prometheus_config.yaml:/etc/prometheus/prometheus.yaml
+      - ./prometheus_config.yaml:/etc/prometheus/prometheus_config.yaml
 
     command:
-      - '--config.file=/etc/prometheus/prometheus_config.yaml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--enable-feature=envvar-expansion'
+      - "--config.file=/etc/prometheus/prometheus_config.yaml"
+      - "--storage.tsdb.path=/prometheus"
     depends_on:
       - kalemna_backend
 
@@ -85,5 +85,5 @@ services:
 
 volumes:
   postgres_data:
-
-
+  prom_data:
+  grafana_data:

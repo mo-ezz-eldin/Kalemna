@@ -1,3 +1,4 @@
+import time
 from collections.abc import Callable
 from typing import Any
 
@@ -36,9 +37,9 @@ class LLMProxy(ILlm):
 
 
         self.circuit_breaker = {
-            primary_provider: 0,
-            fallback_provider: 0,
-            fallback2_provider: 0
+            primary_provider: 0.0,
+            fallback_provider: 0.0,
+            fallback2_provider: 0.0
         }
 
         self.cooldown_seconds = 240
@@ -82,9 +83,6 @@ class LLMProxy(ILlm):
                             self.circuit_breaker[provider_name] = 0.0
 
                         return response
-
-
-
 
             except Exception as e:
 

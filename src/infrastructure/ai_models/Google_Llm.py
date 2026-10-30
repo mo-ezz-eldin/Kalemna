@@ -10,7 +10,7 @@ class Google_Llm(ILlm):
     def __init__(self, temperature: float, secret: str):
         self.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=secret, temperature=temperature)
 
-    async def generate(self, prompt: Any, parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
+    async def generate(self, prompt: Any,schema : Any , parser: Any, details: dict, config: dict, guardrails: Callable | None = None):
         if guardrails is None:
             chain = prompt | self.llm | parser
         else:

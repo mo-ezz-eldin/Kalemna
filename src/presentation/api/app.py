@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from loguru import logger
+from prometheus_fastapi_instrumentator import Instrumentator
 from psycopg_pool import AsyncConnectionPool
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -85,7 +86,7 @@ async def lifespan_context(app: FastAPI):
         app.state.llm_proxy = LLMProxy(primary_provider='local' ,  url = settings.openai_url , fallback_provider='google_gemini' ,
                                        fallback2_provider='cohere',
                                        fallback_api_key=settings.gemini_api_key , fallback2_api_key=settings.cohere_api_key ,
-                                       temperature=0.0)
+                                       temperature=0.7)
 
         logger.info('LLM proxy loaded successfully!')
 
@@ -135,6 +136,8 @@ app.include_router(db_management_router ,tags=["admin role"])
 
 app.add_exception_handler(Exception, exception_handler)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+Instrumentator().instrument(app).expose(app)
 
 if __name__ == '__main__':
     uvicorn.run("src.presentation.api.app:app", host="127.0.0.1", port=8000, reload=True)

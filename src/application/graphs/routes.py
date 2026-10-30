@@ -1,3 +1,4 @@
+from src.application.graphs.intents_without_needing_tools import INTENTS_CONFIGURED_WITOUT_NEEDING_TOOLS
 from src.application.graphs.State import Customer_State
 from src.config.Constant import INTENT_LABELS
 from src.config.intents_metadata import Meta_Data_Intents

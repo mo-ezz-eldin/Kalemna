@@ -1,4 +1,4 @@
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim@sha256:673719e071ecf27434fd2635bbd8d00f49f4fdd81f243143438a42ced8bedf60 AS builder
 
 WORKDIR /build
 
@@ -8,7 +8,6 @@ RUN uv venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY requirements.in .
-
 
 RUN uv pip compile requirements.in \
     --python-version 3.11 \
@@ -31,4 +30,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["gunicorn", "src.presentation.api.app:app", "--host", "0.0.0.0", "--port", "8000" ,"--workers" , "4"]
+CMD ["gunicorn", "src.presentation.api.app:app", "--bind", "0.0.0.0:8000", "--workers", "4", "-k", "uvicorn.workers.UvicornWorker"]

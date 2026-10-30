@@ -1,1 +1,1 @@
-INTENTS_CONFIGURED_WITOUT_NEEDING_TOOLS=['needing guidance','greeting','review','complaint']
+INTENTS_CONFIGURED_WITOUT_NEEDING_TOOLS=['needing guidance','greeting','review','complaint','contact_customer_service']

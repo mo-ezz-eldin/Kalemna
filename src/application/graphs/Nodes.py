@@ -1,7 +1,11 @@
+import time
+
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
+from loguru import logger
 
 from src.application.decision_maker import DecisionMaker
+from src.application.graphs.graph_schemas import JudgeExtractSchema
 from src.application.graphs.State import Customer_State
 from src.application.graphs.tool_calling_per_intent import INTENT_TO_TOOLS_MAP
 from src.application.guardrails.output_safety_layer import safety_json_output
@@ -22,7 +26,9 @@ class Intent_Sentiment_Node:
         self.orchestrator = orchestrator
 
     async def __call__(self, state: Customer_State, config: dict):
+        start_ml_inference=time.perf_counter()
         models_predictions = self.orchestrator.execute(state["user_query"])
+        logger.debug(f'time taken for ml models inference: {time.perf_counter() - start_ml_inference}')
         return {
             "predicted_intent": models_predictions["intent_result"]["intent"],
             "predicted_sentiment": models_predictions["sentiment_result"]["feeling"],
@@ -51,14 +57,17 @@ class judge_and_extract_entities:
             "chat_history": chat_history,
         }
 
+        start_time_for_judge = time.perf_counter()
+        results = await self.llm_proxy.generate(prompt=judge_and_extract_entities_template ,
+                                                                                   schema=JudgeExtractSchema ,
+                                                                                   parser=judge_extract_parser ,
+                                                                                   details=details ,
+                                                                                   config=config ,
+                                                                                   guardrails=safety_json_output)
 
-        results = await self.llm_proxy.generate(
-            prompt=judge_and_extract_entities_template,
-            parser=judge_extract_parser,
-            guardrails=safety_json_output,
-            details=details,
-            config=config,
-        )
+        logger.debug(f'results found :{results}')
+
+        logger.debug(f'time taken for judge to complete: {time.perf_counter() - start_time_for_judge}')
 
         return {
             "final_intent": results["final_intent"],
@@ -77,6 +86,10 @@ class decide_excute:
 
     async def __call__(self, state: Customer_State, config: dict):
         current_intent = state.get("final_intent", "")
+
+        logger.debug(f'current_intent:{current_intent}')
+
+
         tools_extracted_from_intent = INTENT_TO_TOOLS_MAP.get(current_intent)
         intent_to_tools = [self.tools_list.get(name) for name in tools_extracted_from_intent]
 
@@ -86,10 +99,11 @@ class decide_excute:
             "messages": state["messages"],
         }
 
+        start_time_for_decide = time.perf_counter()
         response = await self.llm_proxy.execute_tools(
             prompt=decide_execute_prompt, tools_list=intent_to_tools, details=details, config=config
         )
-
+        logger.debug(f'time taken for decide to execute: {time.perf_counter() - start_time_for_decide}')
         return {"messages": [response]}
 
 
@@ -144,6 +158,10 @@ class finalize_node:
 
         config["tags"].append("final_responder")
 
-        response = await self.llm_proxy.generate(prompt=FINALIZE_PROMPT, parser=parser, details=details, config=config)
+        start_time_for_finalize = time.perf_counter()
+
+        response = await self.llm_proxy.generate(prompt=FINALIZE_PROMPT,schema=None , parser=parser, details=details, config=config)
+
+        logger.debug(f'time taken for finalize node: {time.perf_counter() - start_time_for_finalize}')
 
         return {"messages": [AIMessage(content=response)]}

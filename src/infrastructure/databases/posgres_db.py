@@ -20,7 +20,7 @@ class PosgresDb(IDatabase):
     def __init__(self, config):
         self.config = config
         self.engine = create_async_engine(self.config, echo=False ,pool_size=10,
-    max_overflow=0,     
+    max_overflow=0,
     pool_timeout=30 )
 
     async def return_engine(self):
