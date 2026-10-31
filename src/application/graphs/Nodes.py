@@ -27,7 +27,10 @@ class Intent_Sentiment_Node:
 
     async def __call__(self, state: Customer_State, config: dict):
         start_ml_inference=time.perf_counter()
-        models_predictions = self.orchestrator.execute(state["user_query"])
+        with NODE_EXECUTION_TIME.labels(node_name="intent_sentiment").time():
+
+            models_predictions = await run_in_threadpool(self.orchestrator.execute,state["user_query"])
+
         logger.debug(f'time taken for ml models inference: {time.perf_counter() - start_ml_inference}')
         return {
             "predicted_intent": models_predictions["intent_result"]["intent"],
