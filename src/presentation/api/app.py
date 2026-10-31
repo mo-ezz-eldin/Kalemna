@@ -137,7 +137,10 @@ app.include_router(db_management_router ,tags=["admin role"])
 app.add_exception_handler(Exception, exception_handler)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-Instrumentator().instrument(app).expose(app)
+
+instrumentor = setup_instrumentator()
+
+instrumentor.instrument(app).expose(app)
 
 if __name__ == '__main__':
     uvicorn.run("src.presentation.api.app:app", host="127.0.0.1", port=8000, reload=True)
