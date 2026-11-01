@@ -13,6 +13,7 @@ from src.presentation.api.dependency import (
     get_agent_graph,
     get_intent_classifier,
     get_sentiment_classifier,
+    limit_concurrency_and_track_waiting
 )
 from src.presentation.api.schemas import ChatRequest
 
@@ -80,7 +81,7 @@ async def predict_feeling(
     return {"status": "success", "data": result}
 
 
-@router.post("/chat")
+@router.post("/chat" , dependencies=[Depends(limit_concurrency_and_track_waiting)])
 @limiter.limit("4/minutes")
 async def chat(
     request: Request,

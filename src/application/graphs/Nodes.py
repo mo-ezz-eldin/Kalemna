@@ -3,6 +3,7 @@ import time
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from loguru import logger
+from starlette.concurrency import run_in_threadpool
 
 from src.application.decision_maker import DecisionMaker
 from src.application.graphs.graph_schemas import JudgeExtractSchema
@@ -19,6 +20,7 @@ from src.application.prompts.judge_and_extract_entities_prompt import (
 from src.config.Constant import INTENT_LABELS
 from src.config.intents_metadata import Meta_Data_Intents
 from src.domain.interfaces.ILlm import ILlm
+from src.infrastructure.monitoring.adding_custom_metrics import NODE_EXECUTION_TIME
 
 
 class Intent_Sentiment_Node:
@@ -61,7 +63,8 @@ class judge_and_extract_entities:
         }
 
         start_time_for_judge = time.perf_counter()
-        results = await self.llm_proxy.generate(prompt=judge_and_extract_entities_template ,
+        with NODE_EXECUTION_TIME.labels(node_name = 'judge_extract').time():
+            results = await self.llm_proxy.generate(prompt=judge_and_extract_entities_template ,
                                                                                    schema=JudgeExtractSchema ,
                                                                                    parser=judge_extract_parser ,
                                                                                    details=details ,
@@ -103,7 +106,8 @@ class decide_excute:
         }
 
         start_time_for_decide = time.perf_counter()
-        response = await self.llm_proxy.execute_tools(
+        with NODE_EXECUTION_TIME.labels(node_name = 'decide').time():
+            response = await self.llm_proxy.execute_tools(
             prompt=decide_execute_prompt, tools_list=intent_to_tools, details=details, config=config
         )
         logger.debug(f'time taken for decide to execute: {time.perf_counter() - start_time_for_decide}')
@@ -163,7 +167,8 @@ class finalize_node:
 
         start_time_for_finalize = time.perf_counter()
 
-        response = await self.llm_proxy.generate(prompt=FINALIZE_PROMPT,schema=None , parser=parser, details=details, config=config)
+        with NODE_EXECUTION_TIME.labels(node_name = 'finalize').time():
+            response = await self.llm_proxy.generate(prompt=FINALIZE_PROMPT,schema=None , parser=parser, details=details, config=config)
 
         logger.debug(f'time taken for finalize node: {time.perf_counter() - start_time_for_finalize}')
 

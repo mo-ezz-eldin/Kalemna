@@ -6,7 +6,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from loguru import logger
-from prometheus_fastapi_instrumentator import Instrumentator
 from psycopg_pool import AsyncConnectionPool
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -17,6 +16,7 @@ from src.application.orchestrator import ChatOrchestrator
 from src.config.Constant import INTENT_LABELS, SENTIMENT_LABELS
 from src.config.settings import settings
 from src.infrastructure.ai_models.intent_model import IntentModel
+from src.infrastructure.monitoring.instrumentator import setup_instrumentator
 from src.infrastructure.ai_models.llm_proxy import LLMProxy
 from src.infrastructure.ai_models.sentiment_model import SentimentClassifier
 from src.infrastructure.databases.posgres_db import PosgresDb
@@ -139,7 +139,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 instrumentor = setup_instrumentator()
-
 instrumentor.instrument(app).expose(app)
 
 if __name__ == '__main__':
